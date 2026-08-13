@@ -1,0 +1,137 @@
+.venues-page {
+  padding-top: 10px;
+}
+
+.venues-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f4f4f4;
+  border-radius: 10px;
+  padding: 10px 14px;
+  width: 260px;
+}
+
+.search-icon {
+  color: #999;
+  font-size: 20px !important;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.filter-btn.active {
+  background: #2E7D32;
+  border-color: #2E7D32;
+  color: #fff;
+}
+
+.venues-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 800px;
+  margin: 0 auto 32px;
+}
+
+.venue-card {
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.venue-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(46,125,50,0.18);
+}
+
+.venue-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.venue-location {
+  font-size: 14px;
+  color: #666;
+  margin-top: 2px !important;
+}
+
+.venue-price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2E7D32;
+  margin-top: 4px !important;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.pagination button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.venue-map-frame {
+  margin-top: 20px;
+}
+
+.venue-map-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.venue-map {
+  background: #E8F5E9;
+  border-radius: 12px;
+  padding: 16px;
+  height: 180px;
+}
+
+.loading-text, .no-data {
+  color: #999;
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+.book-btn {
+  margin-top: 10px !important;
+  background: #2E7D32 !important;
+  text-transform: none !important;
+}
