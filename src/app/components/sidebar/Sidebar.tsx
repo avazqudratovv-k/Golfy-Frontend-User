@@ -18,10 +18,11 @@ export default function Sidebar() {
       <LogoutButton />
       <div className="sidebar">
         <div className="sidebar-top">
-          <div className="sidebar-logo">
+          {/* Only this line was changed from a <div> to a <Link> */}
+          <Link to="/" className="sidebar-logo">
             <img src="/icons/golfy-logo.svg" alt="Golfy" />
             Golfy
-          </div>
+          </Link>
 
           <div className="sidebar-links">
             <NavLink

@@ -1,0 +1,116 @@
+/* --- Statistics Section --- */
+.static-frame {
+  padding: 60px 0;
+}
+
+.static-frame .info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.static-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.static-num {
+  font-size: 32px;
+  font-weight: 600;
+  color: #2E7D32;
+}
+
+.static-text {
+  font-size: 14px;
+  color: #666;
+}
+
+/* --- Top Venues Section --- */
+.top-venues-frame {
+  padding: 40px 0;
+}
+
+.top-venues-frame .category-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.top-venues-frame .cards-frame {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.top-venues-frame .card {
+  width: 220px;
+  padding: 8px;
+}
+
+.no-data {
+  color: #999;
+  font-size: 14px;
+}
+
+/* --- Consolidated & Perfectly Blended Hero Banner --- */
+.hero-photo-frame {
+  display: flex;
+  align-items: stretch; /* Forces text and image sections to be exactly the same height */
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  background-color: #17381d; /* Solid background matches Tiger's dark photo edge */
+}
+
+.hero-photo-text {
+  flex: 1;
+  padding: 48px 40px;
+  background: linear-gradient(to right, #275d2b 0%, #204e24 70%, #17381d 100%);
+}
+
+.quote-icon {
+  color: #A5D6A7;
+  font-size: 28px !important;
+}
+
+.hero-quote {
+  color: #ffffff;
+  font-size: 22px;
+  font-family: 'Poppins', sans-serif;
+  margin: 10px 0 12px !important;
+  line-height: 1.4;
+}
+
+.hero-attribution {
+  color: #e0e0e0 !important;
+  font-size: 13px !important;
+}
+
+.hero-photo-image {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: #17381d; 
+}
+
+.hero-photo-image img {
+  width: 100%;
+  height: 100%; /* Changed from 220px to 100% to match container bounds exactly */
+  object-fit: cover;
+  display: block;
+
+  /* Enhanced Mask: Fades out Left edge, Top/Bottom edges, AND the sharp Right boundary line */
+  mask-image: 
+    linear-gradient(to left, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%);
+  mask-composite: intersect;
+  
+  -webkit-mask-image: 
+    linear-gradient(to left, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%);
+  -webkit-mask-composite: destination-in;
+}

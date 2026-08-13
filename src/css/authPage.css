@@ -1,0 +1,60 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.auth-form {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 8px;
+  font-family: 'Poppins', sans-serif;
+  color: #2E7D32;
+}
+
+.auth-form input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-family: 'Poppins', sans-serif;
+}
+
+.auth-form button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #2E7D32;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.auth-error {
+  color: #d32f2f;
+  font-size: 13px;
+  text-align: center;
+}
+
+.auth-switch {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+}
+
+.auth-switch span {
+  color: #2E7D32;
+  text-decoration: underline;
+  cursor: pointer;
+}

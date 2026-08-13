@@ -1,46 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
 .sidebar {
-  width: 160px;
+  width: 200px;
   height: 100vh;
   border-right: 1px solid #e5e5e5;
-  padding: 24px 18px;
+  padding: 26px 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 30px;
   position: fixed;
   top: 0;
   left: 0;
   background: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box; /* FIXES THE SCROLLING: Includes padding inside 100vh calculation */
+  overflow: hidden;       /* Prevents accidental scrolling behavior entirely */
 }
 
 .sidebar-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   font-weight: 600;
-  font-size: 16px;
-  margin-bottom: 32px;
+  font-size: 22px;
+  margin-bottom: 10px;
   color: #2E7D32;
+  text-decoration: none; /* FIXES THE UNDERLINE: Removes standard link styling */
 }
 
+
 .sidebar-logo img {
-  width: 20px;
+  width: 28px; /* Increased from 22px */
+  height: 28px;
+  border-radius: 50%; /* Rounds the logo image completely */
+  object-fit: cover;
 }
 
 .sidebar-links {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .sidebar-links a {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 10px;
-  border-radius: 8px;
+  gap: 14px; /* Increased spacing between icon and text */
+  padding: 12px 14px;
+  border-radius: 10px;
   text-decoration: none;
-  color: #666;
-  font-size: 14px;
+  color: #555;
+  font-size: 16px; /* Increased from 15px */
+  font-weight: 400;
+}
+
+/* Controls Material UI icon sizing for regular links */
+.sidebar-links a svg {
+  font-size: 22px !important; /* Increased from 19px */
 }
 
 .sidebar-links a:hover {
@@ -55,31 +72,61 @@
 
 .sidebar-account {
   border-top: 1px solid #e5e5e5;
-  padding-top: 12px;
+  padding-top: 20px; /* More breathing room below the divider line */
 }
 
 .sidebar-account a {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 10px;
+  gap: 14px; /* Matches the top navigation link layout */
+  padding: 12px 14px;
+  border-radius: 10px; /* Added border-radius so account hover looks uniform */
   text-decoration: none;
   color: #2E7D32;
-  font-size: 13px;
+  font-size: 16px; /* Increased from 15px */
   font-weight: 500;
+}
+
+.sidebar-account a:hover {
+  background: #f4f4f4; /* Gives feedback when hovering over account actions */
+}
+
+/* Controls Material UI icon sizing for account links */
+.sidebar-account a svg {
+  font-size: 22px !important; /* Increased from 19px */
 }
 
 .logout-button {
   position: fixed;
-  top: 14px;
+  top: 16px;
   right: 20px;
   background: none;
   border: none;
   color: #999;
-  font-size: 12px;
+  font-size: 14px; /* Increased slightly for legibility */
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
 .logout-button:hover {
   color: #666;
+}
+
+.logout-button {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #D32F2F; /* Material Red color */
+  font-size: 20px;
+  font-weight: 600; /* Makes the text thick/bold */
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: opacity 0.2s ease; /* Smooth fade effect on hover */
+}
+
+.logout-button:hover {
+  opacity: 0.8; /* Slightly dims on hover for button feedback */
+  color: #C62828; /* Slightly darker red on hover */
 }

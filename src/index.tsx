@@ -4,8 +4,8 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { store } from "./app/store";
 import ContextProvider from "./app/context/contextProvider";
-import App from "./App";
 import "./css/index.css";
+import App from "./App";
 
 const container = document.getElementById("root") as HTMLElement;
 const root = ReactDOM.createRoot(container);
