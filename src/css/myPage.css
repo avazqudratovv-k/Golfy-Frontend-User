@@ -1,0 +1,170 @@
+.my-page {
+  max-width: 380px;
+  animation: fadeSlideIn 0.4s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-banner {
+  background: linear-gradient(135deg, #2E7D32, #1B5E20);
+  border-radius: 16px;
+  padding: 28px 24px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-avatar-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 600;
+  border: 2px solid rgba(255,255,255,0.4);
+  animation: pop 0.4s ease;
+  flex-shrink: 0;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-since {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.profile-info-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 8px 20px;
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.info-row:not(:last-child) {
+  border-bottom: 1px solid #f4f4f4;
+}
+
+.info-icon {
+  color: #2E7D32 !important;
+  font-size: 18px !important;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.saved-msg {
+  color: #2E7D32 !important;
+  font-size: 13px !important;
+}
+
+.divider {
+  border-top: 1px solid #eee;
+  margin: 28px 0;
+}
+
+.recent-bookings-summary .section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.summary-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.summary-venue {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.summary-detail {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Animations */
+.flag-sway {
+  transform-origin: 100px 60px;
+  animation: sway 2.4s ease-in-out infinite;
+}
+
+.ball-bob {
+  animation: bob 1.8s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ... Keep everything from .my-page down to animations exactly the same ... */
+
+.my-page-layout {
+  display: flex;
+  align-items: center;       /* Centers illustration vertically relative to form */
+  justify-content: center;   /* Anchors layout child contents perfectly */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.my-page-main {
+  flex: 1;
+  max-width: 380px;
+}
+
+/* Base style: Hidden on narrow viewports */
+.golf-illustration {
+  display: none;
+  width: 400px; 
+  height: auto;
+  flex-shrink: 0;
+  
+  /* Pushes illustration completely into the center space of the page viewport */
+  margin: 0 auto; 
+}
+
+/* Display it reliably on desktop screens */
+@media (min-width: 900px) {
+  .golf-illustration {
+    display: block;
+  }
+}

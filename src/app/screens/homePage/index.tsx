@@ -20,7 +20,7 @@ export default function HomePage() {
         const [topVenues, stats, recentReviews] = await Promise.all([
           venueService.getTopVenues(),
           venueService.getStats(),
-          reviewService.getRecentReviews(3),
+          reviewService.getRecentReviews(4),
         ]);
         dispatch(setTopVenues(topVenues));
         dispatch(setStats(stats));

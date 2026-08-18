@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mui/material";
 import SearchBar from "./components/SearchBar";
@@ -27,26 +27,48 @@ export default function VenuesPage() {
   const page = useSelector(retrievePage);
   const loading = useSelector(retrieveLoading);
 
+  // Use a ref to cache the service instance so it isn't recreated on every single render
+  const venueServiceRef = useRef(new VenueService());
+
   useEffect(() => {
+    // 1. Create an AbortController to cancel older, lagging requests
+    const controller = new AbortController();
+    let isMounted = true;
+
     const fetchVenues = async () => {
       dispatch(setLoading(true));
       try {
-        const venueService = new VenueService();
-        const result = await venueService.getAllVenues({
+        // 2. Targets your actual service method name matching your API file
+        const result = await venueServiceRef.current.getAllVenues({
           page,
           limit: LIMIT,
           sort,
           search,
         });
-        dispatch(setVenues(result));
-      } catch (err) {
-        console.log("Error fetching venues:", err);
+
+        // 3. Only update state if the component hasn't unmounted or switched configurations
+        if (isMounted) {
+          dispatch(setVenues(result));
+        }
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          console.log("Error fetching venues:", err);
+        }
       } finally {
-        dispatch(setLoading(false));
+        if (isMounted) {
+          dispatch(setLoading(false));
+        }
       }
     };
+
     fetchVenues();
-  }, [dispatch, page, sort, search]);
+
+    // 4. Cleanup function cancels the request if page/sort/search change again instantly
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [dispatch, page, sort, search]); // Keeps tabs on updates safely
 
   const hasNextPage = venues.length === LIMIT;
 
@@ -58,7 +80,12 @@ export default function VenuesPage() {
       </div>
 
       {loading ? (
-        <Box className="loading-text">Loading...</Box>
+        <Box
+          className="loading-text"
+          style={{ padding: "20px", textAlign: "center" }}
+        >
+          Loading Venues...
+        </Box>
       ) : venues.length !== 0 ? (
         <div className="venues-grid">
           {venues.map((venue: Venue) => (
@@ -71,14 +98,14 @@ export default function VenuesPage() {
 
       <div className="pagination">
         <button
-          disabled={page === 1}
+          disabled={page === 1 || loading}
           onClick={() => dispatch(setPage(page - 1))}
         >
           Prev
         </button>
         <span>{page}</span>
         <button
-          disabled={!hasNextPage}
+          disabled={!hasNextPage || loading}
           onClick={() => dispatch(setPage(page + 1))}
         >
           Next

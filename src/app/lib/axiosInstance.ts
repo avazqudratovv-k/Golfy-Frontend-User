@@ -12,7 +12,7 @@ axiosInstance.interceptors.response.use(
     const isAuthRequest =
       error.config?.url === "/user/login" || error.config?.url === "/user/signup";
 
-    if (error.response?.status === 401 && !isAuthRequest) {
+    if ((error.response?.status === 401 || error.response?.status === 403) && !isAuthRequest) {
       localStorage.removeItem("userData");
       window.location.href = "/auth";
     }

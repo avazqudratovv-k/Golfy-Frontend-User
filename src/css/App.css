@@ -1,4 +1,6 @@
 .App {
+  display: flex;
+  min-height: 100vh;
   text-align: center;
 }
 
@@ -39,6 +41,16 @@
 }
 
 .page-content {
-  margin-left: 200px;
+  margin-left: 200px; /* Matches your sidebar width */
+  display: flex;
+  flex-direction: column;
+  flex: 1;            /* Forces it to take up all remaining width next to sidebar */
+  min-height: 100vh;
+  box-sizing: border-box; /* Prevents padding from breaking the 100vh height */
+}
+
+/* 3. Force the main container to grow and push the footer */
+.main-body {
+  flex: 1 0 auto;    /* Grows to fill space, but doesn't shrink below content size */
   padding: 40px;
 }

@@ -8,6 +8,7 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
+  margin-right: 315px;
   flex-wrap: wrap;
 }
 
@@ -109,6 +110,7 @@
 
 .venue-map-frame {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .venue-map-title {

@@ -1,2 +1,4 @@
 import { RootState } from "../../store";
-export const retrieveSelectedVenues = (state: RootState) => state.bookingsPage.selectedVenues;
+
+export const retrieveSelected = (state: RootState) => state.bookingsPage.selected;
+export const retrieveMyBookings = (state: RootState) => state.bookingsPage.myBookings;
