@@ -1,56 +1,43 @@
-.App {
-  display: flex;
-  min-height: 100vh;
-  text-align: center;
-}
+/* Real-app adjustments on top of the design canvas styles. */
+html, body, #root { min-height: 100%; }
+.g-app { min-height: 100vh; display: flex; flex-direction: column; }
+.g-app > main, .g-app > .g-mainpage { flex: 1 0 auto; }
+.g-mainpage { padding: 40px 0 80px; }
+.is-m .g-mainpage { padding: 24px 0 48px; }
+.g-foot { flex: none; }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+/* overlays/toasts are positioned against the window, not a mock-up frame */
+.g-overlay { position: fixed; padding-top: 12vh; }
+.g-toastpos { position: fixed; top: 80px; right: 24px; z-index: 60; display: grid; gap: 8px; }
+.is-m .g-toastpos { left: 16px; right: 16px; top: 76px; }
+.g-sheetwrap { position: fixed; z-index: 40; }
+.g-sheet { position: fixed; top: auto; bottom: 0; min-height: 0; max-height: 88vh; overflow-y: auto; }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-float infinite 3s ease-in-out;
-  }
-}
+/* header */
+.g-word img { display: block; height: 40px; width: auto; }
+.g-navbtn { background: transparent; border: 0; font: inherit; cursor: pointer; }
+.g-navbtn { color: var(--on-primary); font-weight: 600; font-size: 14px; min-height: 44px; padding: 0 10px; border-radius: var(--radius-md); }
+.g-navbtn:hover { background: rgba(255, 255, 255, .16); }
 
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-}
+/* photos: real images fill the box, the placeholder note is never shown */
+.g-photo-note { display: none; }
+.g-photo.has-img { background-color: var(--photo); background-size: cover; background-position: center; }
+.g-hero .g-photo-note { display: none; }
 
-.App-link {
-  color: rgb(112, 76, 182);
-}
+/* gallery adapts to the number of photos */
+.g-gallery--1 { grid-template-columns: 1fr; grid-template-rows: 340px; }
+.g-gallery--1 .g-photo:first-child { grid-row: auto; }
+.g-gallery--2 { grid-template-columns: 1fr 1fr; grid-template-rows: 340px; }
+.g-gallery--2 .g-photo:first-child { grid-row: auto; }
+.g-gallery--3 { grid-template-columns: 2fr 1fr; }
+.is-m .g-gallery--1, .is-m .g-gallery--2, .is-m .g-gallery--3 { display: flex; }
+.g-gallery .g-photo--empty::after { display: none; }
 
-@keyframes App-logo-float {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-.page-content {
-  margin-left: 200px; /* Matches your sidebar width */
-  display: flex;
-  flex-direction: column;
-  flex: 1;            /* Forces it to take up all remaining width next to sidebar */
-  min-height: 100vh;
-  box-sizing: border-box; /* Prevents padding from breaking the 100vh height */
-}
-
-/* 3. Force the main container to grow and push the footer */
-.main-body {
-  flex: 1 0 auto;    /* Grows to fill space, but doesn't shrink below content size */
-  padding: 40px;
-}
+/* misc */
+.g-link { color: var(--primary-text); font-weight: 600; text-decoration: underline; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
+.g-themebtn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; background: none; border: 0; border-radius: 8px; color: var(--ink-muted); font: 600 13px var(--font-body); cursor: pointer; }
+.g-themebtn:hover { background: var(--surface-sunken); }
+.g-hidden-file { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
+.g-center .g-row { justify-content: center; }
+a.g-btn { text-decoration: none; }
+.g-avatar-img { background-size: cover; background-position: center; }
