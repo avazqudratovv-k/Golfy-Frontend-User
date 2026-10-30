@@ -1,35 +1,38 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Sidebar from "./components/sidebar/Sidebar";
-import HomePage from "./screens/homePage";
-import VenuesPage from "./screens/venuesPage";
-import BookingsPage from "./screens/bookingsPage";
-import MyPage from "./screens/myPage";
-import HelpPage from "./screens/helpPage";
-import AuthPage from "./screens/authPage";
-import Footer from "./components/footer/Footer";
-import "./css/App.css";
-import "./css/footer.css";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import { RequireAuth } from "./components/RouteGuards";
+import HomePage from "./pages/HomePage";
+import VenuesPage from "./pages/VenuesPage";
+import VenuePage from "./pages/VenuePage";
+import CheckoutPage from "./pages/CheckoutPage";
+import ConfirmationPage from "./pages/ConfirmationPage";
+import BookingsPage from "./pages/BookingsPage";
+import ReviewPage from "./pages/ReviewPage";
+import ProfilePage from "./pages/ProfilePage";
+import FavouritesPage from "./pages/FavouritesPage";
+import AuthPage from "./pages/AuthPages";
+import { ErrorBoundary, NotFoundPage } from "./pages/ErrorPages";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <Sidebar />
-      <div className="page-content">
-        <main className="main-body">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/venues" element={<VenuesPage />} />
-            <Route path="/bookings" element={<BookingsPage />} />
-            <Route path="/my-page" element={<MyPage />} />
-            <Route path="/help" element={<HelpPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </div>
+    <ErrorBoundary>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/venues" element={<VenuesPage />} />
+          <Route path="/venues/:id" element={<VenuePage />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/signup" element={<AuthPage />} />
+          <Route path="/checkout/:id" element={<RequireAuth><CheckoutPage /></RequireAuth>} />
+          <Route path="/confirmation/:id" element={<RequireAuth><ConfirmationPage /></RequireAuth>} />
+          <Route path="/bookings" element={<RequireAuth><BookingsPage /></RequireAuth>} />
+          <Route path="/review/:bookingId" element={<RequireAuth><ReviewPage /></RequireAuth>} />
+          <Route path="/favourites" element={<RequireAuth><FavouritesPage /></RequireAuth>} />
+          <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </ErrorBoundary>
   );
 }
-
-export default App;
