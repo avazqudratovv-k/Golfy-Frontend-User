@@ -129,7 +129,7 @@ export function CountUp({
       cancelAnimationFrame(raf);
     };
   }, [value, duration]);
-  return <span ref={ref}>{n.toLocaleString('en-US')}</span>;
+  return <span ref={ref}>{n.toLocaleString('ko-KR')}</span>;
 }
 
 const CONFETTI_COLORS = ['#E8743B', '#F6C9A8', '#0F3D2E', '#8FD9B0', '#ffffff'];

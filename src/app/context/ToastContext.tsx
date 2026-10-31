@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ToastOptions {
   error?: boolean;
@@ -12,6 +13,7 @@ interface ToastItem extends ToastOptions {
 const ToastContext = createContext<(message: string, options?: ToastOptions) => void>(() => {});
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
+  const { t: tr } = useTranslation();
   const [items, setItems] = useState<ToastItem[]>([]);
   const nextId = useRef(1);
   const timers = useRef<number[]>([]);
@@ -47,7 +49,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   {t.action.label}
                 </button>
               )}
-              <button className="g-iconbtn" type="button" aria-label="Dismiss" onClick={() => dismiss(t.id)}>
+              <button className="g-iconbtn" type="button" aria-label={tr("toast.dismiss")} onClick={() => dismiss(t.id)}>
                 <i className="i i-x" />
               </button>
             </div>

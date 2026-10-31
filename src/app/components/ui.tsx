@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
 import { BookingStatus } from "../lib/enums";
 import { Venue } from "../lib/types";
 import { imgUrl, isPopular, money, ratingText, reviewsText, typeLabel } from "../lib/format";
@@ -10,8 +12,9 @@ import { useReveal } from "./Motion";
 
 /** star row (read only) */
 export function Stars({ value, label }: { value: number; label?: string }) {
+  const { t } = useTranslation();
   return (
-    <span className="g-stars" role="img" aria-label={label ?? `${value} out of 5 stars`}>
+    <span className="g-stars" role="img" aria-label={label ?? t("stars.label", { value })}>
       {[1, 2, 3, 4, 5].map((i) => (
         <i key={i} className={i <= Math.round(value) ? "i i-star" : "i i-staro"} />
       ))}
@@ -19,22 +22,23 @@ export function Stars({ value, label }: { value: number; label?: string }) {
   );
 }
 
-const STATUS: Record<BookingStatus, { label: string; icon: string; cls: string }> = {
-  [BookingStatus.PENDING]: { label: "Pending", icon: "i-clock", cls: "pending" },
-  [BookingStatus.CONFIRMED]: { label: "Confirmed", icon: "i-check", cls: "confirmed" },
-  [BookingStatus.FINISHED]: { label: "Finished", icon: "i-flag", cls: "finished" },
-  [BookingStatus.CANCELLED]: { label: "Cancelled", icon: "i-slash", cls: "cancelled" },
+const STATUS: Record<BookingStatus, { icon: string; cls: string }> = {
+  [BookingStatus.PENDING]: { icon: "i-clock", cls: "pending" },
+  [BookingStatus.CONFIRMED]: { icon: "i-check", cls: "confirmed" },
+  [BookingStatus.FINISHED]: { icon: "i-flag", cls: "finished" },
+  [BookingStatus.CANCELLED]: { icon: "i-slash", cls: "cancelled" },
 };
 
-export const statusLabel = (s: BookingStatus) => STATUS[s].label;
+export const statusLabel = (s: BookingStatus) => i18n.t(`status.${s}`);
 export const statusIcon = (s: BookingStatus) => STATUS[s].icon;
 
 export function StatusBadge({ status, style }: { status: BookingStatus; style?: React.CSSProperties }) {
+  const { t } = useTranslation();
   const s = STATUS[status];
   return (
     <span className={`g-badge g-badge--${s.cls}`} style={style}>
       <i className={`i ${s.icon}`} />
-      {s.label}
+      {t(`status.${status}`)}
     </span>
   );
 }
@@ -86,13 +90,14 @@ export function Pagination({
   label: string;
   summary?: string;
 }) {
+  const { t } = useTranslation();
   if (pageCount <= 1) return null;
   return (
     <nav aria-label={label}>
       <ul className="g-pages">
         <li>
           <button className="g-page" type="button" disabled={page <= 1} onClick={() => onPage(page - 1)}>
-            <i className="i i-left" />Previous
+            <i className="i i-left" />{t("pagination.previous")}
           </button>
         </li>
         {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
@@ -101,7 +106,7 @@ export function Pagination({
               className="g-page"
               type="button"
               aria-current={n === page ? "page" : undefined}
-              aria-label={`Page ${n}`}
+              aria-label={t("pagination.page", { n })}
               onClick={() => onPage(n)}
             >
               {n}
@@ -110,7 +115,7 @@ export function Pagination({
         ))}
         <li>
           <button className="g-page" type="button" disabled={page >= pageCount} onClick={() => onPage(page + 1)}>
-            Next<i className="i i-right" />
+            {t("pagination.next")}<i className="i i-right" />
           </button>
         </li>
       </ul>
@@ -124,7 +129,7 @@ export function ConfirmDialog({
   title,
   text,
   confirmLabel,
-  cancelLabel = "Keep",
+  cancelLabel,
   busy,
   onConfirm,
   onClose,
@@ -137,6 +142,7 @@ export function ConfirmDialog({
   onConfirm: () => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const cancelRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     cancelRef.current?.focus();
@@ -152,7 +158,7 @@ export function ConfirmDialog({
         <p id="dlg-d" className="g-muted">{text}</p>
         <div className="g-modal-actions">
           <button ref={cancelRef} className="g-btn g-btn--secondary" type="button" onClick={onClose}>
-            {cancelLabel}
+            {cancelLabel ?? t("common.keep")}
           </button>
           <button className="g-btn g-btn--danger" type="button" onClick={onConfirm} disabled={busy}>
             {busy && <span className="g-spin" />}
@@ -207,6 +213,7 @@ export function HeartButton({ venue, inline }: { venue: Venue; inline?: boolean 
   const { user } = useAuth();
   const { isFav, toggle } = useFavorites();
   const toast = useToast();
+  const { t } = useTranslation();
   const on = isFav(venue._id);
 
   if (!user) {
@@ -214,7 +221,7 @@ export function HeartButton({ venue, inline }: { venue: Venue; inline?: boolean 
       <Link
         className={`g-heart${inline ? " g-heart--inline" : ""}`}
         to={`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`}
-        aria-label={`Log in to save ${venue.venueName} to favourites`}
+        aria-label={t("heart.loginToSave", { name: venue.venueName })}
       >
         <i className="i i-heart" />
       </Link>
@@ -226,10 +233,10 @@ export function HeartButton({ venue, inline }: { venue: Venue; inline?: boolean 
       className={`g-heart${inline ? " g-heart--inline" : ""}${on ? " on" : ""}`}
       type="button"
       aria-pressed={on}
-      aria-label={on ? `Remove ${venue.venueName} from favourites` : `Save ${venue.venueName} to favourites`}
+      aria-label={on ? t("heart.remove", { name: venue.venueName }) : t("heart.save", { name: venue.venueName })}
       onClick={async () => {
         const result = await toggle(venue._id);
-        if (result === true) toast(`${venue.venueName} saved to favourites.`);
+        if (result === true) toast(t("heart.saved", { name: venue.venueName }));
       }}
     >
       <i className={on ? "i i-heartf" : "i i-heart"} />
@@ -238,6 +245,7 @@ export function HeartButton({ venue, inline }: { venue: Venue; inline?: boolean 
 }
 
 export function VenueCard({ venue, heart, index = 0 }: { venue: Venue; heart?: React.ReactNode; index?: number }) {
+  const { t } = useTranslation();
   const cover = venue.venueImages?.[0];
   const reveal = useReveal<HTMLElement>((index % 4) * 90);
   const to = `/venues/${venue._id}`;
@@ -246,12 +254,12 @@ export function VenueCard({ venue, heart, index = 0 }: { venue: Venue; heart?: R
       <div
         className={`g-photo${cover ? " has-img" : ""}`}
         role="img"
-        aria-label={`Photo of ${venue.venueName}`}
+        aria-label={t("venueCard.photoOf", { name: venue.venueName })}
       >
         {cover && <img className="g-photo-img" src={imgUrl(cover)} alt="" width={1600} height={1067} loading="lazy" decoding="async" />}
         {isPopular(venue) && (
           <span className="g-chip">
-            <i className="i i-flame" />Popular
+            <i className="i i-flame" />{t("venueCard.popular")}
           </span>
         )}
       </div>
@@ -267,8 +275,8 @@ export function VenueCard({ venue, heart, index = 0 }: { venue: Venue; heart?: R
           role="img"
           aria-label={
             (venue.reviewCount ?? 0) > 0
-              ? `Rated ${ratingText(venue)} out of 5 from ${reviewsText(venue)}`
-              : "No reviews yet"
+              ? t("venueCard.rated", { rating: ratingText(venue), reviews: reviewsText(venue) })
+              : t("venueCard.noReviewsYet")
           }
         >
           <i className="i i-star" />
@@ -276,8 +284,8 @@ export function VenueCard({ venue, heart, index = 0 }: { venue: Venue; heart?: R
           <span>· {reviewsText(venue)}</span>
         </div>
         <div className="g-between g-card-foot">
-          <span className="g-price">{money(venue.pricePerHour)} <small>/ hour</small></span>
-          <Link className="g-btn g-btn--accent g-btn--sm" to={to}>Book</Link>
+          <span className="g-price">{money(venue.pricePerHour)} <small>{t("common.perHour")}</small></span>
+          <Link className="g-btn g-btn--accent g-btn--sm" to={to}>{t("venueCard.book")}</Link>
         </div>
       </div>
     </article>

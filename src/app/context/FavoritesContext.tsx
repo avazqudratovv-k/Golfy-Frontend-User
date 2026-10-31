@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import i18n from "../../i18n";
 import { favoriteApi } from "../services/api";
 import { useAuth } from "./AuthContext";
 import { useToast } from "./ToastContext";
@@ -44,7 +45,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           else next.delete(venueId);
           return next;
         });
-        toast("Could not update your favourites. Please try again.", { error: true });
+        toast(i18n.t("favourites.updateFailed"), { error: true });
         return null;
       }
     },

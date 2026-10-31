@@ -1,4 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   Link,
   useLocation,
@@ -40,6 +41,7 @@ function LoginForm({
   expired: boolean;
   blockedFlag: boolean;
 }) {
+  const { t } = useTranslation();
   const { setUser } = useAuth();
   const { shake, trigger, onEnd } = useShake();
   const [email, setEmail] = useState('');
@@ -62,8 +64,8 @@ function LoginForm({
     try {
       const user = await authApi.login({ email: email.trim(), password });
       onDone({
-        title: `Welcome back, ${user.name.split(' ')[0]}`,
-        subtitle: "You're logged in. Let's find you a tee time.",
+        title: t('auth.welcomeBack', { name: user.name.split(' ')[0] }),
+        subtitle: t('auth.welcomeBackText'),
       });
       setUser(user);
     } catch (err) {
@@ -88,34 +90,33 @@ function LoginForm({
   return (
     <>
       <div>
-        <h1 className="g-h1">Log in</h1>
-        <p className="sub">Good to see you again.</p>
+        <h1 className="g-h1">{t('auth.loginHeading')}</h1>
+        <p className="sub">{t('auth.loginSub')}</p>
       </div>
 
       {expired && (
-        <Banner info icon="i-clock" title="Your session ended">
-          Please log in again to keep booking.
+        <Banner info icon="i-clock" title={t('auth.sessionEnded')}>
+          {t('auth.sessionEndedText')}
         </Banner>
       )}
       {(blockedFlag || problem === 'blocked') && (
         <Banner
           icon="i-slash"
           title={
-            <>
-              You have been blocked, contact{' '}
-              <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: 'inherit' }}>
-                {SUPPORT_EMAIL}
-              </a>
-            </>
+            <Trans
+              i18nKey="auth.blocked"
+              values={{ email: SUPPORT_EMAIL }}
+              components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: 'inherit' }} /> }}
+            />
           }
         />
       )}
       {problem === 'tooMany' && (
-        <Banner title="Too many requests, please try again later!" />
+        <Banner title={t('apiError.tooManyRequests')} />
       )}
       {problem === 'server' && (
-        <Banner title="Something went wrong on our side">
-          You were not logged in. Please try again.
+        <Banner title={t('auth.serverTitle')}>
+          {t('auth.loginServerText')}
         </Banner>
       )}
 
@@ -127,7 +128,7 @@ function LoginForm({
           <div style={{ '--n': 0 } as React.CSSProperties}>
             <IconField
               id="le"
-              label="Email"
+              label={t('auth.email')}
               icon="i-mail"
               type="email"
               autoComplete="email"
@@ -140,12 +141,9 @@ function LoginForm({
               }}
               error={
                 eEmail ? (
-                  'Enter your email.'
+                  t('auth.enterEmail')
                 ) : problem === 'unknown' ? (
-                  <>
-                    We can't find an account with this email.{' '}
-                    <Link to="/signup">Sign up</Link>
-                  </>
+                  <Trans i18nKey="auth.unknownEmail" components={{ link: <Link to="/signup" /> }} />
                 ) : undefined
               }
             />
@@ -153,7 +151,7 @@ function LoginForm({
           <div style={{ '--n': 1 } as React.CSSProperties}>
             <IconField
               id="lp"
-              label="Password"
+              label={t('auth.password')}
               icon="i-lock"
               type="password"
               autoComplete="current-password"
@@ -165,9 +163,9 @@ function LoginForm({
               }}
               error={
                 ePass
-                  ? 'Enter your password.'
+                  ? t('auth.enterPassword')
                   : problem === 'wrong'
-                    ? 'That password is not right. Try again.'
+                    ? t('auth.wrongPassword')
                     : undefined
               }
             />
@@ -179,11 +177,11 @@ function LoginForm({
             disabled={busy || problem === 'tooMany'}
           >
             {busy ? <span className="g-spin" /> : null}
-            Log in <i className="i i-right arrow" />
+            {t('auth.submitLogin')} <i className="i i-right arrow" />
           </button>
           <p className="g-secure" style={{ '--n': 3 } as React.CSSProperties}>
             <i className="i i-lock" />
-            Your password is stored encrypted.
+            {t('auth.secure')}
           </p>
         </form>
       </div>
@@ -192,6 +190,7 @@ function LoginForm({
 }
 
 function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
+  const { t } = useTranslation();
   const { setUser } = useAuth();
   const { shake, trigger, onEnd } = useShake();
   const [form, setForm] = useState({
@@ -231,16 +230,16 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
         phone: form.phone.trim(),
       });
       onDone({
-        title: `Welcome to Golfy, ${account.name.split(' ')[0]}`,
-        subtitle: 'Your account is ready. Time to book your first round.',
+        title: t('auth.welcomeNew', { name: account.name.split(' ')[0] }),
+        subtitle: t('auth.welcomeNewText'),
       });
       setUser(account);
     } catch (err) {
-      const { status, message } = apiError(err);
+      const { status, raw } = apiError(err);
       if (status === 429) setProblem('tooMany');
-      else if (/email/i.test(message) && /already/i.test(message))
+      else if (/email/i.test(raw) && /already/i.test(raw))
         setProblem('email');
-      else if (/phone/i.test(message) && /already/i.test(message))
+      else if (/phone/i.test(raw) && /already/i.test(raw))
         setProblem('phone');
       else setProblem('server');
       trigger();
@@ -252,16 +251,16 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
   return (
     <>
       <div>
-        <h1 className="g-h1">Create your account</h1>
-        <p className="sub">It takes less than a minute.</p>
+        <h1 className="g-h1">{t('auth.signupHeading')}</h1>
+        <p className="sub">{t('auth.signupSub')}</p>
       </div>
 
       {problem === 'tooMany' && (
-        <Banner title="Too many requests, please try again later!" />
+        <Banner title={t('apiError.tooManyRequests')} />
       )}
       {problem === 'server' && (
-        <Banner title="Something went wrong on our side">
-          Your account was not created. Please try again.
+        <Banner title={t('auth.serverTitle')}>
+          {t('auth.signupServerText')}
         </Banner>
       )}
 
@@ -273,18 +272,18 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
           <div style={{ '--n': 0 } as React.CSSProperties}>
             <IconField
               id="sn"
-              label="Full name"
+              label={t('auth.fullName')}
               icon="i-user"
               autoComplete="name"
               value={form.name}
               onChange={set('name')}
-              error={tried && e.name ? 'Please add your name.' : undefined}
+              error={tried && e.name ? t('auth.nameError') : undefined}
             />
           </div>
           <div style={{ '--n': 1 } as React.CSSProperties}>
             <IconField
               id="se"
-              label="Email"
+              label={t('auth.email')}
               icon="i-mail"
               type="email"
               autoComplete="email"
@@ -294,12 +293,9 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
               invalid={problem === 'email'}
               error={
                 tried && e.email ? (
-                  'Enter an email like you@example.com.'
+                  t('auth.emailError')
                 ) : problem === 'email' ? (
-                  <>
-                    This email is already in use.{' '}
-                    <Link to="/login">Log in instead</Link>
-                  </>
+                  <Trans i18nKey="auth.emailUsed" components={{ link: <Link to="/login" /> }} />
                 ) : undefined
               }
             />
@@ -307,20 +303,20 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
           <div style={{ '--n': 2 } as React.CSSProperties}>
             <IconField
               id="sp"
-              label="Phone"
+              label={t('auth.phone')}
               icon="i-phone"
               type="tel"
               inputMode="tel"
               autoComplete="tel"
-              placeholder="+1 415 555 0142"
+              placeholder={t('auth.phonePlaceholder')}
               value={form.phone}
               onChange={set('phone')}
               invalid={problem === 'phone'}
               error={
                 tried && e.phone
-                  ? 'Enter a phone number with country code.'
+                  ? t('auth.phoneError')
                   : problem === 'phone'
-                    ? 'This phone number is already in use.'
+                    ? t('auth.phoneUsed')
                     : undefined
               }
             />
@@ -328,7 +324,7 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
           <div style={{ '--n': 3 } as React.CSSProperties}>
             <IconField
               id="sw"
-              label="Password"
+              label={t('auth.password')}
               icon="i-lock"
               type="password"
               autoComplete="new-password"
@@ -337,7 +333,7 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
               invalid={tried && e.password}
               hint={<StrengthMeter password={form.password} />}
               error={
-                tried && e.password ? 'Use at least 8 characters.' : undefined
+                tried && e.password ? t('auth.passwordError') : undefined
               }
             />
           </div>
@@ -348,11 +344,11 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
             disabled={busy || problem === 'tooMany'}
           >
             {busy ? <span className="g-spin" /> : null}
-            Create account <i className="i i-right arrow" />
+            {t('auth.submitSignup')} <i className="i i-right arrow" />
           </button>
           <p className="g-secure" style={{ '--n': 5 } as React.CSSProperties}>
             <i className="i i-lock" />
-            Your password is stored encrypted.
+            {t('auth.secure')}
           </p>
         </form>
       </div>

@@ -291,3 +291,19 @@ img.g-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; 
 .g-iconin > .g-iconin-mark { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
 .g-iconin > .g-iconin-mark img { width: 22px; height: 22px; }
 .g-authx-logo { width: 128px; height: auto; margin-bottom: auto; }
+
+/* KO | EN language switch */
+.g-lang { display: inline-flex; padding: 3px; gap: 2px; border: 1.5px solid var(--line-strong); border-radius: var(--radius-pill); background: var(--surface); }
+.g-lang-btn { min-width: 44px; min-height: 36px; padding: 0 10px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--ink-muted); font: 700 var(--text-xs) var(--font-body); letter-spacing: .06em; cursor: pointer; }
+.g-lang-btn:hover { color: var(--ink); }
+.g-lang-btn[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+.g-foot .g-lang { background: transparent; border-color: rgba(255, 255, 255, .35); }
+.g-foot .g-lang-btn { color: rgba(255, 255, 255, .8); }
+.g-foot .g-lang-btn[aria-pressed="true"] { background: #fff; color: var(--primary); }
+.g-foot-tools { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.g-lang--nav { margin-left: var(--space-2); }
+@media (max-width: 720px) { .g-lang--nav { margin-left: 0; align-self: flex-start; } }
+
+/* Korean wraps between words, not inside them */
+html[lang="ko"] body { word-break: keep-all; overflow-wrap: break-word; }
+.g-authx-copy { margin-top: var(--space-4); }

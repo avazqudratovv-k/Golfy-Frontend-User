@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { bookingApi } from "../services/api";
 import { useLoader } from "../hooks/useMedia";
@@ -13,6 +14,7 @@ const timeLeft = (ms: number) => {
 };
 
 export default function CheckoutPage() {
+  const { t } = useTranslation();
   const { id = "" } = useParams();
   const navigate = useNavigate();
   const { data: booking, setData, loading, error, reload } = useLoader(() => bookingApi.one(id), [id]);
@@ -43,9 +45,9 @@ export default function CheckoutPage() {
     const missing = apiError(error).status === 404;
     return (
       <main className="g-mainpage"><div className="g-wrap" style={{ maxWidth: 760 }}>
-        <EmptyState icon="i-ticket" title={missing ? "Booking not found" : "We could not load your booking"}
-          text={missing ? "It may belong to another account, or the link is wrong." : "Something went wrong on our side. Please try again."}
-          action={<div className="g-row"><Link className="g-btn g-btn--primary" to="/bookings">My bookings</Link>{!missing && <button className="g-btn g-btn--secondary" type="button" onClick={reload}>Try again</button>}</div>} />
+        <EmptyState icon="i-ticket" title={missing ? t("bk.notFound") : t("checkout.loadFailed")}
+          text={missing ? t("bk.notFoundText") : t("bk.loadFailedText")}
+          action={<div className="g-row"><Link className="g-btn g-btn--primary" to="/bookings">{t("bk.myBookings")}</Link>{!missing && <button className="g-btn g-btn--secondary" type="button" onClick={reload}>{t("common.retry")}</button>}</div>} />
       </div></main>
     );
   }
@@ -73,8 +75,8 @@ export default function CheckoutPage() {
       const { status: code, message } = apiError(err);
       setProblem(
         code === 409
-          ? { title: "That time is taken", text: message }
-          : { title: "We could not complete your booking", text: message || "Something went wrong on our side. Please try again." }
+          ? { title: t("checkout.taken"), text: message }
+          : { title: t("checkout.payFailed"), text: message || t("bk.loadFailedText") }
       );
     } finally {
       setPaying(false);
@@ -89,7 +91,7 @@ export default function CheckoutPage() {
       setAsking(false);
     } catch (err) {
       setAsking(false);
-      setProblem({ title: "We could not cancel this booking", text: apiError(err).message || "Please try again." });
+      setProblem({ title: t("checkout.cancelFailed"), text: apiError(err).message || t("checkout.cancelFailedText") });
     } finally {
       setCancelling(false);
     }
@@ -101,37 +103,37 @@ export default function CheckoutPage() {
         {isPending && (
           <>
             <div className="g-between">
-              <h1 className="g-h1">Checkout</h1>
-              <span className={`g-badge g-badge--pending g-num${left < 5 * 60000 ? " g-urgent" : ""}`} style={{ height: 32, fontSize: 14 }} role="timer" aria-label={`Time left to pay: ${timeLeft(left)}`}>
-                <i className="i i-clock" />Held for {timeLeft(left)}
+              <h1 className="g-h1">{t("checkout.title")}</h1>
+              <span className={`g-badge g-badge--pending g-num${left < 5 * 60000 ? " g-urgent" : ""}`} style={{ height: 32, fontSize: 14 }} role="timer" aria-label={t("checkout.timerAria", { time: timeLeft(left) })}>
+                <i className="i i-clock" />{t("checkout.held", { time: timeLeft(left) })}
               </span>
             </div>
-            <Banner info icon="i-clock" title={`Your slot is held for ${HOLD_MINUTES} minutes`}>
-              Your booking is pending. Pay before the timer ends, or the slot is released for other players.
+            <Banner info icon="i-clock" title={t("checkout.holdTitle", { count: HOLD_MINUTES })}>
+              {t("checkout.holdText")}
             </Banner>
             {problem && <Banner title={problem.title}>{problem.text}</Banner>}
             <div className="g-card g-booking">
-              <div className={`g-photo${venue?.venueImages?.[0] ? " has-img" : ""}`} style={photoStyle(venue?.venueImages?.[0])} role="img" aria-label={`Photo of ${venue?.venueName}`} />
+              <div className={`g-photo${venue?.venueImages?.[0] ? " has-img" : ""}`} style={photoStyle(venue?.venueImages?.[0])} role="img" aria-label={t("venueCard.photoOf", { name: venue?.venueName })} />
               <div className="g-card-body">
                 <div className="g-between"><h3>{venue?.venueName}</h3><StatusBadge status={booking.status} /></div>
                 <div className="g-meta"><i className="i i-pin" />{venue?.venueLocation}</div>
               </div>
             </div>
             <div className="g-box">
-              <h2 style={{ fontSize: 19 }}>Booking summary</h2>
+              <h2 style={{ fontSize: 19 }}>{t("checkout.summary")}</h2>
               <div>
-                <div className="g-kv"><span>Venue</span><span>{venue?.venueName}</span></div>
-                <div className="g-kv"><span>Date</span><span>{day}</span></div>
-                <div className="g-kv"><span>Time</span><span>{range} ({hours} {hours === 1 ? "hour" : "hours"})</span></div>
-                <div className="g-kv"><span>Price per hour</span><span>{money(venue?.pricePerHour ?? 0)}</span></div>
+                <div className="g-kv"><span>{t("bk.venue")}</span><span>{venue?.venueName}</span></div>
+                <div className="g-kv"><span>{t("bk.date")}</span><span>{day}</span></div>
+                <div className="g-kv"><span>{t("bk.time")}</span><span>{range} ({t("bk.hours", { count: hours })})</span></div>
+                <div className="g-kv"><span>{t("bk.pricePerHour")}</span><span>{money(venue?.pricePerHour ?? 0)}</span></div>
               </div>
-              <div className="g-total"><span style={{ fontWeight: 600 }}>Total</span><b>{money(booking.price)}</b></div>
-              <span className="g-hint">Final price, confirmed by Golfy.</span>
+              <div className="g-total"><span style={{ fontWeight: 600 }}>{t("bk.total")}</span><b>{money(booking.price)}</b></div>
+              <span className="g-hint">{t("checkout.finalPrice")}</span>
               <div className="g-row" style={{ justifyContent: "flex-end" }}>
-                <button className="g-btn g-btn--secondary" type="button" onClick={() => setAsking(true)}>Cancel booking</button>
+                <button className="g-btn g-btn--secondary" type="button" onClick={() => setAsking(true)}>{t("checkout.cancel")}</button>
                 <button className="g-btn g-btn--accent" type="button" onClick={pay} disabled={paying} aria-busy={paying}>
                   {paying && <span className="g-spin" />}
-                  {paying ? "Processing" : `Pay and confirm ${money(booking.price)}`}
+                  {paying ? t("checkout.processing") : t("checkout.pay", { price: money(booking.price) })}
                 </button>
               </div>
             </div>
@@ -141,37 +143,37 @@ export default function CheckoutPage() {
         {done && (
           <div className="g-box" style={{ justifyItems: "center", textAlign: "center", padding: "48px 24px" }} role="status">
             <span className="g-okmark"><i className="i i-lg i-check" /></span>
-            <h1 className="g-h1">Payment received</h1>
+            <h1 className="g-h1">{t("checkout.received")}</h1>
             <StatusBadge status={BookingStatus.CONFIRMED} />
-            <p className="g-muted" style={{ maxWidth: "44ch" }}>Your booking at {venue?.venueName} is confirmed.</p>
-            <Link className="g-btn g-btn--primary" to={`/confirmation/${booking._id}`}>View confirmation</Link>
+            <p className="g-muted" style={{ maxWidth: "44ch" }}>{t("checkout.confirmedText", { name: venue?.venueName })}</p>
+            <Link className="g-btn g-btn--primary" to={`/confirmation/${booking._id}`}>{t("checkout.viewConfirmation")}</Link>
           </div>
         )}
 
         {expired && (
           <div className="g-box" style={{ justifyItems: "center", textAlign: "center", padding: "48px 24px" }} role="alert">
             <i className="i i-lg i-clock" style={{ color: "var(--ink-muted)" }} />
-            <h1 className="g-h1">Your hold ended</h1>
+            <h1 className="g-h1">{t("checkout.holdEnded")}</h1>
             <p className="g-muted" style={{ maxWidth: "44ch" }}>
-              The {HOLD_MINUTES} minutes ran out, so we released <span className="g-num">{day}, {range}</span> at {venue?.venueName}. You have not been charged.
+              <Trans i18nKey="checkout.holdEndedText" values={{ count: HOLD_MINUTES, when: `${day}, ${range}`, name: venue?.venueName }} components={{ time: <span className="g-num" /> }} />
             </p>
-            <Link className="g-btn g-btn--primary" to={`/venues/${booking.venueId}`}>Choose a new time</Link>
+            <Link className="g-btn g-btn--primary" to={`/venues/${booking.venueId}`}>{t("checkout.chooseNew")}</Link>
           </div>
         )}
 
         {booking.status === BookingStatus.CANCELLED && (
           <div className="g-box" style={{ justifyItems: "center", textAlign: "center", padding: "48px 24px" }} role="status">
             <StatusBadge status={BookingStatus.CANCELLED} />
-            <h1 className="g-h1">Booking cancelled</h1>
-            <p className="g-muted" style={{ maxWidth: "44ch" }}>The slot is free again and you have not been charged.</p>
-            <Link className="g-btn g-btn--primary" to="/venues">Find a venue</Link>
+            <h1 className="g-h1">{t("bk.cancelled")}</h1>
+            <p className="g-muted" style={{ maxWidth: "44ch" }}>{t("checkout.cancelledText")}</p>
+            <Link className="g-btn g-btn--primary" to="/venues">{t("bk.findVenue")}</Link>
           </div>
         )}
       </div>
 
       {asking && (
-        <ConfirmDialog title="Cancel this booking?" confirmLabel="Cancel booking" cancelLabel="Keep booking" busy={cancelling}
-          text={`${venue?.venueName}, ${day}, ${range}. The slot will be released for other players.`}
+        <ConfirmDialog title={t("checkout.askTitle")} confirmLabel={t("checkout.cancel")} cancelLabel={t("checkout.keep")} busy={cancelling}
+          text={t("checkout.askText", { name: venue?.venueName, day, range })}
           onConfirm={cancel} onClose={() => setAsking(false)} />
       )}
     </main>

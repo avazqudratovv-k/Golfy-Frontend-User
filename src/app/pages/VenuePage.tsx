@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { dateKeyOf, daysInMonth, kstDateKey, kstHourNow, kstParts, shiftMonth, weekdayOf } from "../lib/kst";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { bookingApi, reviewApi, venueApi } from '../services/api';
@@ -14,6 +15,7 @@ import {
 import { Reveal } from '../components/Motion';
 import {
   apiError,
+  formatCalendarDay,
   formatShortDate,
   hourLabel,
   imgUrl,
@@ -26,30 +28,6 @@ import {
 } from '../lib/format';
 import { Venue } from '../lib/types';
 
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-const WEEKDAYS = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
-
 function Lightbox({
   images,
   alt,
@@ -61,6 +39,7 @@ function Lightbox({
   start: number;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [i, setI] = useState(start);
   const step = (d: number) => setI((n) => (n + d + images.length) % images.length);
   useEffect(() => {
@@ -78,18 +57,18 @@ function Lightbox({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div className="g-lightbox" role="dialog" aria-modal="true" aria-label={`${alt} photos`}>
+    <div className="g-lightbox" role="dialog" aria-modal="true" aria-label={t('venue.photos', { name: alt })}>
       <div className="g-lightbox-stage">
-        <img src={imgUrl(images[i])} alt={`${alt}, ${i + 1} of ${images.length}`} />
-        <button className="close" type="button" aria-label="Close photos" onClick={onClose} autoFocus>
+        <img src={imgUrl(images[i])} alt={t('venue.photoOf', { name: alt, i: i + 1, n: images.length })} />
+        <button className="close" type="button" aria-label={t('venue.closePhotos')} onClick={onClose} autoFocus>
           <i className="i i-x" />
         </button>
         {images.length > 1 && (
           <>
-            <button className="prev" type="button" aria-label="Previous photo" onClick={() => step(-1)}>
+            <button className="prev" type="button" aria-label={t('venue.prevPhoto')} onClick={() => step(-1)}>
               <i className="i i-left" />
             </button>
-            <button className="next" type="button" aria-label="Next photo" onClick={() => step(1)}>
+            <button className="next" type="button" aria-label={t('venue.nextPhoto')} onClick={() => step(1)}>
               <i className="i i-right" />
             </button>
           </>
@@ -101,6 +80,7 @@ function Lightbox({
 }
 
 function Gallery({ venue }: { venue: Venue }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState<number | null>(null);
   const images = (venue.venueImages ?? []).slice(0, 5);
   const count = Math.max(images.length, 1);
@@ -114,7 +94,7 @@ function Gallery({ venue }: { venue: Venue }) {
       <div
         className={`g-gallery${count <= 3 ? ` g-gallery--${count}` : ''}`}
         role="group"
-        aria-label={`Venue photos, ${images.length} images`}
+        aria-label={t('venue.galleryLabel', { count: images.length })}
       >
         {tiles.map((img, i) =>
           img ? (
@@ -122,13 +102,13 @@ function Gallery({ venue }: { venue: Venue }) {
               key={i}
               type="button"
               className="g-photo has-img"
-              aria-label={`Open photo ${i + 1} of ${images.length} of ${venue.venueName}`}
+              aria-label={t('venue.openPhoto', { i: i + 1, n: images.length, name: venue.venueName })}
               onClick={() => setOpen(i)}
             >
               <img className="g-photo-img" src={imgUrl(img)} alt="" width={1600} height={1067} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
             </button>
           ) : (
-            <div key={i} className="g-photo g-photo--empty" role="img" aria-label="Photo coming soon" />
+            <div key={i} className="g-photo g-photo--empty" role="img" aria-label={t('venue.photoSoon')} />
           ),
         )}
       </div>
@@ -146,6 +126,10 @@ function Calendar({
   selected: string;
   onSelect: (key: string) => void;
 }) {
+  const { t } = useTranslation();
+  const monthNames = t('calendar.months', { returnObjects: true }) as unknown as string[];
+  const weekdaysLong = t('calendar.weekdaysLong', { returnObjects: true }) as unknown as string[];
+  const weekdaysShort = t('calendar.weekdaysShort', { returnObjects: true }) as unknown as string[];
   // "today" is the KST day, whatever the browser's time zone is
   const today = kstParts();
   const todayKey = kstDateKey();
@@ -172,7 +156,7 @@ function Calendar({
         <button
           className="g-iconbtn"
           type="button"
-          aria-label="Previous month"
+          aria-label={t('calendar.prevMonth')}
           disabled={isCurrentMonth}
           onClick={() => shift(-1)}
           style={{ opacity: isCurrentMonth ? 0.4 : 1 }}
@@ -180,19 +164,19 @@ function Calendar({
           <i className="i i-left" />
         </button>
         <strong>
-          {MONTHS[view.m]} {view.y}
+          {t('calendar.heading', { monthName: monthNames[view.m], year: view.y })}
         </strong>
         <button
           className="g-iconbtn"
           type="button"
-          aria-label="Next month"
+          aria-label={t('calendar.nextMonth')}
           onClick={() => shift(1)}
         >
           <i className="i i-right" />
         </button>
       </div>
       <div className="g-cal-grid">
-        {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((d) => (
+        {weekdaysShort.map((d) => (
           <span className="g-cal-dow" key={d}>
             {d}
           </span>
@@ -209,7 +193,7 @@ function Calendar({
               key={key}
               type="button"
               className={`g-day${key === todayKey ? ' is-today' : ''}`}
-              aria-label={`${WEEKDAYS[weekday]} ${day} ${MONTHS[view.m]} ${view.y}${key === todayKey ? ', today' : ''}`}
+              aria-label={`${t('calendar.dayLabel', { weekday: weekdaysLong[weekday], day, monthName: monthNames[view.m], year: view.y })}${key === todayKey ? t('calendar.today') : ''}`}
               aria-pressed={key === selected}
               disabled={past}
               onClick={() => onSelect(key)}
@@ -224,6 +208,7 @@ function Calendar({
 }
 
 export default function VenuePage() {
+  const { t, i18n } = useTranslation();
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -243,7 +228,7 @@ export default function VenuePage() {
   );
 
   const [sel, setSel] = useState<{ a: number; b: number } | null>(null);
-  const [conflict, setConflict] = useState<string | null>(null);
+  const [conflict, setConflict] = useState<{ from: string; to: string } | null>(null);
   const [booking, setBooking] = useState(false);
   const [bookError, setBookError] = useState<{
     title: string;
@@ -288,8 +273,8 @@ export default function VenuePage() {
         );
         setConflict(
           busy
-            ? `${busy.startTime} to ${busy.endTime}`
-            : `${hourLabel(x)} to ${hourLabel(x + 1)}`,
+            ? { from: busy.startTime, to: busy.endTime }
+            : { from: hourLabel(x), to: hourLabel(x + 1) },
         );
         return;
       }
@@ -308,8 +293,9 @@ export default function VenuePage() {
   const hours = sel ? sel.b - sel.a + 1 : 0;
   const slotsTitle = useMemo(() => {
     const [y, m, d] = dateKey.split('-').map(Number);
-    return `Availability, ${WEEKDAYS[(weekdayOf(y, m, d) + 6) % 7].slice(0, 3)} ${d} ${MONTHS[m - 1]}`;
-  }, [dateKey]);
+    return t('venue.slotsTitle', { date: formatCalendarDay(m, d, weekdayOf(y, m, d)) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateKey, i18n.language]);
 
   const book = async () => {
     if (!venue || !sel) return;
@@ -330,19 +316,19 @@ export default function VenuePage() {
     } catch (err) {
       const { status, message } = apiError(err);
       if (status === 409) {
-        setBookError({ title: 'That time is taken', text: message });
+        setBookError({ title: t('venue.slotTaken'), text: message });
         availQ.reload();
         setSel(null);
       } else if (status === 429) {
         setBookError({
-          title: 'Too many requests, please try again later!',
+          title: t('apiError.tooManyRequests'),
           text: '',
         });
       } else {
         setBookError({
-          title: 'We could not start your booking',
+          title: t('venue.startFailed'),
           text:
-            message || 'Something went wrong on our side. Please try again.',
+            message || t('venue.loadFailedText'),
         });
       }
     } finally {
@@ -364,7 +350,7 @@ export default function VenuePage() {
           className="g-wrap"
           style={{ display: 'grid', gap: 16 }}
           aria-busy="true"
-          aria-label="Loading venue"
+          aria-label={t('venue.loadingAria')}
         >
           <div className="g-skel" style={{ height: 348, borderRadius: 16 }} />
           <div className="g-skel" style={{ height: 36, width: '50%' }} />
@@ -382,17 +368,15 @@ export default function VenuePage() {
           <EmptyState
             icon="i-search"
             title={
-              notFound ? 'Venue not found' : 'We could not load this venue'
+              notFound ? t('venue.notFound') : t('venue.loadFailed')
             }
             text={
-              notFound
-                ? 'It may have been removed, or the link is wrong.'
-                : 'Something went wrong on our side. Please try again.'
+              notFound ? t('venue.notFoundText') : t('venue.loadFailedText')
             }
             action={
               <div className="g-row">
                 <Link className="g-btn g-btn--primary" to="/venues">
-                  Browse venues
+                  {t('venue.browse')}
                 </Link>
                 {!notFound && (
                   <button
@@ -400,7 +384,7 @@ export default function VenuePage() {
                     type="button"
                     onClick={venueQ.reload}
                   >
-                    Try again
+                    {t('common.retry')}
                   </button>
                 )}
               </div>
@@ -414,8 +398,8 @@ export default function VenuePage() {
   const reviewCount = venue.reviewCount ?? 0;
   const ratingLabel =
     reviewCount > 0
-      ? `Rated ${ratingText(venue)} out of 5 from ${reviewsText(venue)}`
-      : 'No reviews yet';
+      ? t('venueCard.rated', { rating: ratingText(venue), reviews: reviewsText(venue) })
+      : t('venueCard.noReviewsYet');
 
   return (
     <main className="g-mainpage">
@@ -432,7 +416,7 @@ export default function VenuePage() {
           }}
         >
           <i className="i i-left" />
-          All venues
+          {t('venue.allVenues')}
         </Link>
 
         <Gallery venue={venue} />
@@ -448,7 +432,7 @@ export default function VenuePage() {
                     style={{ background: 'var(--primary-tint)' }}
                   >
                     <i className="i i-flame" />
-                    Popular
+                    {t('venue.popular')}
                   </span>
                 )}
               </div>
@@ -474,7 +458,7 @@ export default function VenuePage() {
                 <span>· {reviewsText(venue)}</span>
               </div>
               <div className="g-price" style={{ fontSize: 22 }}>
-                {money(venue.pricePerHour)} <small>/ hour</small>
+                {money(venue.pricePerHour)} <small>{t('common.perHour')}</small>
               </div>
             </div>
             {venue.venueDesc && (
@@ -484,11 +468,11 @@ export default function VenuePage() {
             )}
 
             <section
-              aria-label="Reviews"
+              aria-label={t('venue.reviews')}
               style={{ display: 'grid', gap: 16, marginTop: 24 }}
             >
               <h2 className="g-h2" style={{ margin: 0 }}>
-                Reviews
+                {t('venue.reviews')}
               </h2>
               {reviewCount > 0 ? (
                 <div
@@ -520,12 +504,12 @@ export default function VenuePage() {
                   <div
                     className="g-bars"
                     style={{ flex: '1 1 240px' }}
-                    aria-label="Rating breakdown"
+                    aria-label={t('venue.breakdown')}
                   >
                     {[5, 4, 3, 2, 1].map((s, i) => (
                       <div className="g-barrow" key={s}>
                         <span>
-                          {s} {s > 1 ? 'stars' : 'star'}
+                          {t('venue.stars', { count: s })}
                         </span>
                         <div className="g-track">
                           <div
@@ -542,14 +526,11 @@ export default function VenuePage() {
                 </div>
               ) : (
                 !reviewsQ.loading && (
-                  <p className="g-muted">
-                    No reviews yet. Book a slot and be the first to review after
-                    you play.
-                  </p>
+                  <p className="g-muted">{t('venue.noReviews')}</p>
                 )
               )}
               {shownReviews.map((r, i) => {
-                const name = r.userData?.[0]?.name ?? 'Golfy player';
+                const name = r.userData?.[0]?.name ?? t('home.anonymous');
                 return (
                   <Reveal key={r._id} delay={(i % 3) * 90}>
                     <article className="g-card">
@@ -565,10 +546,7 @@ export default function VenuePage() {
                             </div>
                           </div>
                         </div>
-                        <Stars
-                          value={r.rating}
-                          label={`${r.rating} out of 5 stars`}
-                        />
+                        <Stars value={r.rating} />
                         <p>{r.comment}</p>
                       </div>
                     </article>
@@ -583,28 +561,28 @@ export default function VenuePage() {
                   onClick={() => setShowAll(!showAll)}
                 >
                   {showAll
-                    ? 'Show fewer reviews'
-                    : `Show all ${reviews.length} reviews`}
+                    ? t('venue.showFewer')
+                    : t('venue.showAll', { count: reviews.length })}
                 </button>
               )}
             </section>
           </div>
 
-          <aside className="g-side" aria-label="Book this venue">
+          <aside className="g-side" aria-label={t('venue.bookThis')}>
             <div className="g-panel">
               <span className="g-grab" aria-hidden="true" />
-              <h2 style={{ fontSize: 19 }}>Check availability</h2>
+              <h2 style={{ fontSize: 19 }}>{t('venue.checkAvailability')}</h2>
 
               {(conflict || bookError) && (
                 <Banner
-                  title={conflict ? 'That time is taken' : bookError!.title}
+                  title={conflict ? t('venue.slotTaken') : bookError!.title}
                 >
                   {conflict ? (
-                    <>
-                      This slot conflicts with an existing booking from{' '}
-                      <span className="g-num">{conflict}</span>. Please choose a
-                      different time.
-                    </>
+                    <Trans
+                      i18nKey="venue.slotConflict"
+                      values={{ from: conflict.from, to: conflict.to }}
+                      components={{ time: <span className="g-num" /> }}
+                    />
                   ) : (
                     bookError!.text
                   )}
@@ -613,7 +591,7 @@ export default function VenuePage() {
 
               <div className="g-field">
                 <span className="g-label" id="dl">
-                  Date
+                  {t('venue.date')}
                 </span>
                 <Calendar selected={dateKey} onSelect={changeDate} />
               </div>
@@ -623,23 +601,22 @@ export default function VenuePage() {
                   {slotsTitle}
                 </span>
                 <span className="g-hint">
-                  Tap a start hour. Tap a later hour to book several hours in a
-                  row.
+                  {t('venue.slotsHint')}
                 </span>
                 {availQ.error && (
                   <Banner
-                    title="We could not load availability"
+                    title={t('venue.availError')}
                     action={
                       <button
                         className="g-btn g-btn--secondary g-btn--sm"
                         type="button"
                         onClick={availQ.reload}
                       >
-                        Try again
+                        {t('common.retry')}
                       </button>
                     }
                   >
-                    Please try again.
+                    {t('venue.availErrorText')}
                   </Banner>
                 )}
                 <div
@@ -661,7 +638,7 @@ export default function VenuePage() {
                         type="button"
                         aria-pressed={on}
                         disabled={off && !on}
-                        aria-label={`${hourLabel(h)}${off ? ', taken' : on ? ', selected' : ', free'}`}
+                        aria-label={off ? t('venue.slotTakenAria', { time: hourLabel(h) }) : on ? t('venue.slotSelectedAria', { time: hourLabel(h) }) : t('venue.slotFreeAria', { time: hourLabel(h) })}
                         onClick={() => pick(h)}
                       >
                         {hourLabel(h)}
@@ -670,12 +647,12 @@ export default function VenuePage() {
                   })}
                 </div>
                 <div className="g-row g-hint" style={{ gap: 16 }}>
-                  <span>Outlined: free</span>
-                  <span>Green with a tick: selected</span>
+                  <span>{t('venue.legendFree')}</span>
+                  <span>{t('venue.legendSelected')}</span>
                   <span style={{ textDecoration: 'line-through' }}>
-                    Struck through
+                    {t('venue.legendStruck')}
                   </span>
-                  <span>: taken</span>
+                  <span>{t('venue.legendTaken')}</span>
                 </div>
               </div>
 
@@ -696,22 +673,17 @@ export default function VenuePage() {
                         {sel.b + 1 === 24 ? '24:00' : hourLabel(sel.b + 1)}
                       </span>
                       <span>
-                        {money(venue.pricePerHour)} x {hours}{' '}
-                        {hours === 1 ? 'hour' : 'hours'}
+                        {t('venue.priceTimes', { price: money(venue.pricePerHour), count: hours })}
                       </span>
                     </div>
                     <div className="g-total">
-                      <span style={{ fontWeight: 600 }}>Estimate</span>
+                      <span style={{ fontWeight: 600 }}>{t('venue.estimate')}</span>
                       <b>{money(venue.pricePerHour * hours)}</b>
                     </div>
-                    <span className="g-hint">
-                      Estimated, final price confirmed at checkout
-                    </span>
+                    <span className="g-hint">{t('venue.estimateNote')}</span>
                   </>
                 ) : (
-                  <span className="g-muted">
-                    Pick a start hour to see the price.
-                  </span>
+                  <span className="g-muted">{t('venue.pickStart')}</span>
                 )}
               </div>
 
@@ -723,20 +695,18 @@ export default function VenuePage() {
                 aria-busy={booking}
               >
                 {booking && <span className="g-spin" />}
-                Book
+                {t('venue.book')}
               </button>
               {!user && sel && (
-                <span className="g-hint">
-                  You'll be asked to log in before you pay.
-                </span>
+                <span className="g-hint">{t('venue.loginFirst')}</span>
               )}
             </div>
           </aside>
         </div>
 
         {(similarQ.data?.length ?? 0) > 0 && (
-          <section aria-label="Similar venues" style={{ marginTop: 24 }}>
-            <h2 className="g-h2">Similar venues</h2>
+          <section aria-label={t('venue.similar')} style={{ marginTop: 24 }}>
+            <h2 className="g-h2">{t('venue.similar')}</h2>
             <div className="g-cards">
               {similarQ.data!.map((v, i) => (
                 <VenueCard key={v._id} venue={v} index={i} />

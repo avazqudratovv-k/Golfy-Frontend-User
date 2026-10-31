@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { bookingApi } from "../services/api";
 import { useLoader, useOnline } from "../hooks/useMedia";
@@ -12,14 +13,15 @@ import { Booking } from "../lib/types";
 const TABS = [BookingStatus.PENDING, BookingStatus.CONFIRMED, BookingStatus.FINISHED, BookingStatus.CANCELLED];
 const PER_PAGE = 10;
 
-const EMPTY: Record<BookingStatus, { icon: string; title: string; text: string; cta: boolean }> = {
-  [BookingStatus.PENDING]: { icon: "i-clock", title: "No pending bookings", text: "Bookings you have not paid for yet show here.", cta: true },
-  [BookingStatus.CONFIRMED]: { icon: "i-cal", title: "No confirmed bookings", text: "Once you pay for a booking, it shows here.", cta: true },
-  [BookingStatus.FINISHED]: { icon: "i-flag", title: "No finished rounds yet", text: "After you play, your bookings move here and you can review them.", cta: true },
-  [BookingStatus.CANCELLED]: { icon: "i-slash", title: "No cancelled bookings", text: "Nothing cancelled. Nice.", cta: false },
+const EMPTY: Record<BookingStatus, { icon: string; cta: boolean }> = {
+  [BookingStatus.PENDING]: { icon: "i-clock", cta: true },
+  [BookingStatus.CONFIRMED]: { icon: "i-cal", cta: true },
+  [BookingStatus.FINISHED]: { icon: "i-flag", cta: true },
+  [BookingStatus.CANCELLED]: { icon: "i-slash", cta: false },
 };
 
 export default function BookingsPage() {
+  const { t } = useTranslation();
   const toast = useToast();
   const online = useOnline();
   const { data, setData, loading, error, reload } = useLoader(() => bookingApi.mine(), []);
@@ -46,7 +48,7 @@ export default function BookingsPage() {
       toast(message);
     } catch (err) {
       const { status: code, message: text } = apiError(err);
-      toast(code === 409 ? text : text || "We could not update this booking. Please try again.", { error: true });
+      toast(code === 409 ? text : text || t("bookings.updateFailed"), { error: true });
     } finally {
       setBusy(false);
       setAsking(null);
@@ -63,13 +65,13 @@ export default function BookingsPage() {
   return (
     <main className="g-mainpage">
       <div className="g-wrap" style={{ maxWidth: 860, display: "grid", gap: 24 }}>
-        <PageHeader title="My bookings" subtitle="Upcoming rounds, past games and anything waiting for payment." />
+        <PageHeader title={t("bookings.title")} subtitle={t("bookings.subtitle")} />
 
         {!online && (
-          <Banner info icon="i-wifi" title="You're offline">You can look at your bookings, but changes will not save until you're back.</Banner>
+          <Banner info icon="i-wifi" title={t("bookings.offlineTitle")}>{t("bookings.offlineText")}</Banner>
         )}
 
-        <div className="g-tabs" role="tablist" aria-label="Bookings by status">
+        <div className="g-tabs" role="tablist" aria-label={t("bookings.tabsAria")}>
           {TABS.map((s) => (
             <button key={s} className="g-tab" type="button" role="tab" aria-selected={tab === s} onClick={() => { setTab(s); setPage(1); }}>
               {statusLabel(s)}<span className="g-count">{all.filter((b) => b.status === s).length}</span>
@@ -78,13 +80,13 @@ export default function BookingsPage() {
         </div>
 
         {error && (
-          <Banner title="We could not load your bookings" action={<button className="g-btn g-btn--secondary g-btn--sm" type="button" onClick={reload}>Try again</button>}>
-            Something went wrong on our side. Please try again.
+          <Banner title={t("bookings.loadFailed")} action={<button className="g-btn g-btn--secondary g-btn--sm" type="button" onClick={reload}>{t("common.retry")}</button>}>
+            {t("bk.loadFailedText")}
           </Banner>
         )}
 
         {loading && (
-          <div aria-busy="true" aria-label="Loading bookings" style={{ display: "grid", gap: 16 }}>
+          <div aria-busy="true" aria-label={t("bookings.loadingAria")} style={{ display: "grid", gap: 16 }}>
             {[1, 2, 3].map((k) => (
               <div className="g-card g-booking" key={k}>
                 <div className="g-skel" style={{ flex: "0 0 132px", minHeight: 132, borderRadius: 0 }} />
@@ -99,8 +101,8 @@ export default function BookingsPage() {
         )}
 
         {!loading && !error && mine.length === 0 && (
-          <EmptyState icon={empty.icon} title={empty.title} text={empty.text}
-            action={empty.cta ? <Link className="g-btn g-btn--primary" to="/venues">Find a venue</Link> : undefined} />
+          <EmptyState icon={empty.icon} title={t(`bookings.empty.${tab}.title`)} text={t(`bookings.empty.${tab}.text`)}
+            action={empty.cta ? <Link className="g-btn g-btn--primary" to="/venues">{t("bk.findVenue")}</Link> : undefined} />
         )}
 
         {!loading && !error && mine.length > 0 && (
@@ -113,10 +115,10 @@ export default function BookingsPage() {
                 const canReview = !b.reviewed && (confirmedAndPlayed || b.status === BookingStatus.FINISHED);
                 return (
                   <article className="g-card g-booking" key={b._id}>
-                    <div className={`g-photo${venue?.venueImages?.[0] ? " has-img" : ""}`} style={photoStyle(venue?.venueImages?.[0])} role="img" aria-label={`Photo of ${venue?.venueName ?? "venue"}`} />
+                    <div className={`g-photo${venue?.venueImages?.[0] ? " has-img" : ""}`} style={photoStyle(venue?.venueImages?.[0])} role="img" aria-label={t("venueCard.photoOf", { name: venue?.venueName ?? t("bookings.venueFallback") })} />
                     <div className="g-card-body">
                       <div className="g-between">
-                        <h3><Link to={`/venues/${b.venueId}`} style={{ color: "inherit", textDecoration: "none" }}>{venue?.venueName ?? "Venue"}</Link></h3>
+                        <h3><Link to={`/venues/${b.venueId}`} style={{ color: "inherit", textDecoration: "none" }}>{venue?.venueName ?? t("bookings.venueFallback")}</Link></h3>
                         <StatusBadge status={b.status} />
                       </div>
                       <div className="g-row g-num" style={{ gap: 16 }}>
@@ -127,20 +129,20 @@ export default function BookingsPage() {
                         <span className="g-price">{money(b.price)}</span>
                         <div className="g-row" style={{ gap: 8 }}>
                           {(b.status === BookingStatus.PENDING || b.status === BookingStatus.CONFIRMED) && (
-                            <button className="g-btn g-btn--ghost g-btn--sm" type="button" onClick={() => setAsking(b)}>Cancel</button>
+                            <button className="g-btn g-btn--ghost g-btn--sm" type="button" onClick={() => setAsking(b)}>{t("bookings.cancel")}</button>
                           )}
                           {b.status === BookingStatus.PENDING && (
-                            <Link className="g-btn g-btn--accent g-btn--sm" to={`/checkout/${b._id}`}>Pay now</Link>
+                            <Link className="g-btn g-btn--accent g-btn--sm" to={`/checkout/${b._id}`}>{t("bookings.payNow")}</Link>
                           )}
                           {confirmedAndPlayed && (
                             <button className="g-btn g-btn--secondary g-btn--sm" type="button" disabled={busy}
-                              onClick={() => change(b, BookingStatus.FINISHED, "Marked as finished.")}>Mark finished</button>
+                              onClick={() => change(b, BookingStatus.FINISHED, t("bookings.markedFinished"))}>{t("bookings.markFinished")}</button>
                           )}
-                          {canReview && <Link className="g-btn g-btn--primary g-btn--sm" to={`/review/${b._id}`}>Leave a review</Link>}
-                          {b.reviewed && <span className="g-meta"><i className="i i-check" />Reviewed</span>}
-                          {b.status === BookingStatus.CONFIRMED && !ended && <span className="g-hint">Review opens after you play</span>}
+                          {canReview && <Link className="g-btn g-btn--primary g-btn--sm" to={`/review/${b._id}`}>{t("bookings.review")}</Link>}
+                          {b.reviewed && <span className="g-meta"><i className="i i-check" />{t("bookings.reviewed")}</span>}
+                          {b.status === BookingStatus.CONFIRMED && !ended && <span className="g-hint">{t("bookings.reviewLater")}</span>}
                           {b.status === BookingStatus.CONFIRMED && (
-                            <Link className="g-btn g-btn--ghost g-btn--sm" to={`/confirmation/${b._id}`}>Receipt</Link>
+                            <Link className="g-btn g-btn--ghost g-btn--sm" to={`/confirmation/${b._id}`}>{t("bookings.receipt")}</Link>
                           )}
                         </div>
                       </div>
@@ -149,16 +151,16 @@ export default function BookingsPage() {
                 );
               })}
             </div>
-            <Pagination page={current} pageCount={pageCount} label="Booking pages" onPage={setPage}
-              summary={`Showing ${from + 1}-${from + shown.length} of ${mine.length} bookings`} />
+            <Pagination page={current} pageCount={pageCount} label={t("bookings.pages")} onPage={setPage}
+              summary={t("bookings.showing", { from: from + 1, to: from + shown.length, total: mine.length })} />
           </>
         )}
       </div>
 
       {asking && (
-        <ConfirmDialog title="Cancel this booking?" confirmLabel="Cancel booking" cancelLabel="Keep booking" busy={busy}
-          text={`${asking.venueData?.[0]?.venueName}, ${formatDay(asking.bookingDate)}, ${asking.startTime} - ${asking.endTime}. The slot will be released for other players.`}
-          onConfirm={() => change(asking, BookingStatus.CANCELLED, "Booking cancelled.")} onClose={() => setAsking(null)} />
+        <ConfirmDialog title={t("bookings.askTitle")} confirmLabel={t("bookings.askConfirm")} cancelLabel={t("bookings.askKeep")} busy={busy}
+          text={t("bookings.askText", { name: asking.venueData?.[0]?.venueName, day: formatDay(asking.bookingDate), range: `${asking.startTime} - ${asking.endTime}` })}
+          onConfirm={() => change(asking, BookingStatus.CANCELLED, t("bookings.cancelledToast"))} onClose={() => setAsking(null)} />
       )}
     </main>
   );

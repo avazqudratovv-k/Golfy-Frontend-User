@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { money } from "../lib/format";
 import { BrandMark } from "../components/Brand";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { venueApi } from "../services/api";
@@ -9,13 +11,14 @@ import { VenueQuery } from "../lib/types";
 
 const PER_PAGE = 8;
 const PRICE_MIN = 0;
-const PRICE_MAX = 200;
+const PRICE_MAX = 200000; // won per hour
+const PRICE_STEP = 5000;
 const SORT_TO_API: Record<string, string> = { cheap: "cheap", exp: "expensive", pop: "popular", top: "rating" };
-const RATINGS: [number, string, string][] = [
-  [0, "Any", "Any rating"],
-  [3, "3+", "3 stars and up"],
-  [4, "4+", "4 stars and up"],
-  [4.5, "4.5+", "4.5 stars and up"],
+const RATINGS: [number, string][] = [
+  [0, "Any"],
+  [3, "3+"],
+  [4, "4+"],
+  [4.5, "4.5+"],
 ];
 const TYPES = ["All", "Course", "Simulator", "Range"];
 
@@ -31,43 +34,49 @@ const countActive = (f: Filters) =>
   (f.min > PRICE_MIN || f.max < PRICE_MAX ? 1 : 0) + (f.rating > 0 ? 1 : 0) + (f.type !== "All" ? 1 : 0);
 
 function FilterControls({ value, onChange }: { value: Filters; onChange: (patch: Partial<Filters>) => void }) {
+  const { t } = useTranslation();
+  const typeText = (v: string) => (v === "All" ? t("venues.all") : t(`venueType.${v.toUpperCase()}`));
   return (
     <>
       <div className="g-field">
         <span className="g-label">
-          Price per hour: <span className="g-num">${value.min} to ${value.max}{value.max >= PRICE_MAX ? "+" : ""}</span>
+          <Trans
+            i18nKey="venues.priceLabel"
+            values={{ min: money(value.min), max: `${money(value.max)}${value.max >= PRICE_MAX ? "+" : ""}` }}
+            components={{ 0: <span className="g-num" /> }}
+          />
         </span>
         <div style={{ display: "flex", gap: 16 }}>
           <label style={{ flex: 1, minWidth: 0 }}>
-            <span className="g-hint">Min</span>
-            <input className="g-range" type="range" min={PRICE_MIN} max={PRICE_MAX} step={5} value={value.min}
-              onChange={(e) => onChange({ min: Math.min(+e.target.value, value.max) })} aria-label="Minimum price per hour in dollars" />
+            <span className="g-hint">{t("venues.min")}</span>
+            <input className="g-range" type="range" min={PRICE_MIN} max={PRICE_MAX} step={PRICE_STEP} value={value.min}
+              onChange={(e) => onChange({ min: Math.min(+e.target.value, value.max) })} aria-label={t("venues.minAria")} />
           </label>
           <label style={{ flex: 1, minWidth: 0 }}>
-            <span className="g-hint">Max</span>
-            <input className="g-range" type="range" min={PRICE_MIN} max={PRICE_MAX} step={5} value={value.max}
-              onChange={(e) => onChange({ max: Math.max(+e.target.value, value.min) })} aria-label="Maximum price per hour in dollars" />
+            <span className="g-hint">{t("venues.max")}</span>
+            <input className="g-range" type="range" min={PRICE_MIN} max={PRICE_MAX} step={PRICE_STEP} value={value.max}
+              onChange={(e) => onChange({ max: Math.max(+e.target.value, value.min) })} aria-label={t("venues.maxAria")} />
           </label>
         </div>
       </div>
 
       <div className="g-field">
-        <span className="g-label" id="frl">Minimum rating</span>
+        <span className="g-label" id="frl">{t("venues.minRating")}</span>
         <div className="g-chips" role="radiogroup" aria-labelledby="frl">
-          {RATINGS.map(([v, text, label]) => (
-            <button key={v} className="g-fchip" type="button" role="radio" aria-checked={value.rating === v} aria-label={label} onClick={() => onChange({ rating: v })}>
-              {text}
+          {RATINGS.map(([v, text]) => (
+            <button key={v} className="g-fchip" type="button" role="radio" aria-checked={value.rating === v} aria-label={v === 0 ? t("venues.ratingAnyAria") : t("venues.ratingAria", { value: v })} onClick={() => onChange({ rating: v })}>
+              {v === 0 ? t("venues.ratingAny") : text}
             </button>
           ))}
         </div>
       </div>
 
       <div className="g-field">
-        <span className="g-label" id="ftl">Venue type</span>
+        <span className="g-label" id="ftl">{t("venues.venueType")}</span>
         <div className="g-chips" role="group" aria-labelledby="ftl">
-          {TYPES.map((t) => (
-            <button key={t} className="g-fchip" type="button" aria-pressed={value.type === t} onClick={() => onChange({ type: t })}>
-              {t}
+          {TYPES.map((v) => (
+            <button key={v} className="g-fchip" type="button" aria-pressed={value.type === v} onClick={() => onChange({ type: v })}>
+              {typeText(v)}
             </button>
           ))}
         </div>
@@ -77,6 +86,7 @@ function FilterControls({ value, onChange }: { value: Filters; onChange: (patch:
 }
 
 export default function VenuesPage() {
+  const { t } = useTranslation();
   const { isMobile } = useOutletContext<{ isMobile: boolean }>();
   const online = useOnline();
   const [params, setParams] = useSearchParams();
@@ -126,14 +136,14 @@ export default function VenuesPage() {
   useEffect(() => {
     if (isMobile) return;
     if (draft.min === applied.min && draft.max === applied.max) return;
-    const t = window.setTimeout(() => update(filterPatch(draft)), 350);
-    return () => window.clearTimeout(t);
+    const timer = window.setTimeout(() => update(filterPatch(draft)), 350);
+    return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft.min, draft.max]);
 
   useEffect(() => {
-    const t = window.setTimeout(() => searchText !== q && update({ q: searchText.trim() || null }), 350);
-    return () => window.clearTimeout(t);
+    const timer = window.setTimeout(() => searchText !== q && update({ q: searchText.trim() || null }), 350);
+    return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
@@ -165,35 +175,35 @@ export default function VenuesPage() {
   return (
     <main className="g-mainpage">
       <div className="g-wrap" style={{ display: "grid", gap: 24 }}>
-        <PageHeader title="Venues" subtitle="Courses, simulators and practice ranges, booked by the hour." />
+        <PageHeader title={t("venues.title")} subtitle={t("venues.subtitle")} />
 
         {!online && (
-          <Banner info icon="i-wifi" title="You're offline">
-            Showing the last venues we loaded. We'll refresh when you're back.
+          <Banner info icon="i-wifi" title={t("venues.offlineTitle")}>
+            {t("venues.offlineText")}
           </Banner>
         )}
 
         <div className="g-row" style={{ alignItems: "flex-end" }}>
           <div className="g-field" style={{ flex: "2 1 260px" }}>
-            <label className="g-label" htmlFor="q">Search by venue name</label>
+            <label className="g-label" htmlFor="q">{t("venues.searchLabel")}</label>
             <div className="g-iconin g-iconin--search">
               <BrandMark className="g-iconin-mark" size={22} />
-              <input className="g-input" id="q" type="search" placeholder="Try Seongsu or Jeju" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+              <input className="g-input" id="q" type="search" placeholder={t("venues.searchPlaceholder")} value={searchText} onChange={(e) => setSearchText(e.target.value)} />
             </div>
           </div>
           <div className="g-field" style={{ flex: "1 1 180px" }}>
-            <label className="g-label" htmlFor="sort">Sort by</label>
+            <label className="g-label" htmlFor="sort">{t("venues.sortBy")}</label>
             <select className="g-select" id="sort" value={sort} onChange={(e) => update({ sort: e.target.value })}>
-              <option value="cheap">Cheapest</option>
-              <option value="exp">Most expensive</option>
-              <option value="pop">Most popular</option>
-              <option value="top">Top rated</option>
+              <option value="cheap">{t("venues.sort.cheap")}</option>
+              <option value="exp">{t("venues.sort.exp")}</option>
+              <option value="pop">{t("venues.sort.pop")}</option>
+              <option value="top">{t("venues.sort.top")}</option>
             </select>
           </div>
           {isMobile && (
             <button className="g-btn g-btn--secondary" type="button" onClick={() => { setDraft(applied); setSheet(true); }} aria-haspopup="dialog" style={{ flex: "1 1 100%" }}>
-              <i className="i i-sliders" />Filters
-              {activeCount > 0 && <span className="g-fcount" aria-label={`${activeCount} active filters`}>{activeCount}</span>}
+              <i className="i i-sliders" />{t("venues.filters")}
+              {activeCount > 0 && <span className="g-fcount" aria-label={t("venues.activeFilters", { count: activeCount })}>{activeCount}</span>}
             </button>
           )}
         </div>
@@ -206,60 +216,60 @@ export default function VenuesPage() {
 
         <div className="g-between">
           <p className="g-num" style={{ fontWeight: 700 }} aria-live="polite">
-            {loading || error ? "" : total === 1 ? "1 venue" : `${total} venues`}
+            {loading || error ? "" : t("venues.count", { count: total })}
           </p>
           {activeCount > 0 && !isMobile && (
-            <button className="g-textbtn" type="button" onClick={clearFilters}><i className="i i-sm i-x" />Clear filters</button>
+            <button className="g-textbtn" type="button" onClick={clearFilters}><i className="i i-sm i-x" />{t("venues.clearFilters")}</button>
           )}
         </div>
 
         {error && (
-          <Banner title="We could not load venues" action={<button className="g-btn g-btn--secondary g-btn--sm" type="button" onClick={reload}>Try again</button>}>
-            Something went wrong on our side. Please try again.
+          <Banner title={t("venues.loadErrorTitle")} action={<button className="g-btn g-btn--secondary g-btn--sm" type="button" onClick={reload}>{t("common.retry")}</button>}>
+            {t("venues.loadErrorText")}
           </Banner>
         )}
 
         {loading && (
-          <div className="g-cards" aria-busy="true" aria-label="Loading venues">
+          <div className="g-cards" aria-busy="true" aria-label={t("venues.loadingAria")}>
             {Array.from({ length: 4 }, (_, k) => <VenueCardSkeleton key={k} />)}
           </div>
         )}
 
         {none && q && activeCount === 0 && (
-          <EmptyState icon="i-search" title="No venues found" text={`Nothing matches "${q}". Check the spelling or clear your search.`}
-            action={<button className="g-btn g-btn--secondary" type="button" onClick={() => update({ q: null })}>Clear search</button>} />
+          <EmptyState icon="i-search" title={t("venues.noneTitle")} text={t("venues.noneText", { q })}
+            action={<button className="g-btn g-btn--secondary" type="button" onClick={() => update({ q: null })}>{t("venues.clearSearch")}</button>} />
         )}
         {none && activeCount > 0 && (
-          <EmptyState icon="i-sliders" title="No venues match your filters" text="Try a wider price range, a lower rating or another venue type."
-            action={<button className="g-btn g-btn--secondary" type="button" onClick={clearFilters}>Clear filters</button>} />
+          <EmptyState icon="i-sliders" title={t("venues.noMatchTitle")} text={t("venues.noMatchText")}
+            action={<button className="g-btn g-btn--secondary" type="button" onClick={clearFilters}>{t("venues.clearFilters")}</button>} />
         )}
-        {none && !q && activeCount === 0 && <EmptyState icon="i-search" title="No venues yet" text="Check back soon." />}
+        {none && !q && activeCount === 0 && <EmptyState icon="i-search" title={t("venues.emptyTitle")} text={t("venues.emptyText")} />}
 
         {venues.length > 0 && (
           <>
             <div className="g-cards">{venues.map((v, i) => <VenueCard key={v._id} venue={v} index={i} />)}</div>
-            <Pagination page={page} pageCount={pageCount} label="Venue pages" onPage={(n) => update({ page: n }, true)}
-              summary={`Showing ${from + 1}-${from + venues.length} of ${total} venues`} />
+            <Pagination page={page} pageCount={pageCount} label={t("venues.pages")} onPage={(n) => update({ page: n }, true)}
+              summary={t("venues.showing", { from: from + 1, to: from + venues.length, total })} />
           </>
         )}
       </div>
 
       {isMobile && sheet && (
         <div className="g-sheetwrap" onMouseDown={(e) => e.target === e.currentTarget && setSheet(false)}>
-          <div className="g-sheet" role="dialog" aria-label="Filters" aria-modal="true">
+          <div className="g-sheet" role="dialog" aria-label={t("venues.filters")} aria-modal="true">
             <span className="g-grab" aria-hidden="true" />
             <div className="g-between">
-              <h2 style={{ fontSize: 19 }}>Filters</h2>
-              <button className="g-iconbtn" type="button" aria-label="Close filters" onClick={() => setSheet(false)}><i className="i i-x" /></button>
+              <h2 style={{ fontSize: 19 }}>{t("venues.filters")}</h2>
+              <button className="g-iconbtn" type="button" aria-label={t("venues.closeFilters")} onClick={() => setSheet(false)}><i className="i i-x" /></button>
             </div>
             <FilterControls value={draft} onChange={(patch) => setDraft({ ...draft, ...patch })} />
             <p className="g-hint g-num" aria-live="polite">
-              {countActive(draft) === 0 ? "No filters active" : countActive(draft) === 1 ? "1 filter active" : `${countActive(draft)} filters active`}
+              {countActive(draft) === 0 ? t("venues.noFiltersActive") : t("venues.filtersActive", { count: countActive(draft) })}
             </p>
             <div className="g-row" style={{ flexWrap: "nowrap" }}>
-              <button className="g-btn g-btn--secondary" type="button" onClick={() => setDraft(NO_FILTERS)} style={{ flex: 1 }}>Clear filters</button>
+              <button className="g-btn g-btn--secondary" type="button" onClick={() => setDraft(NO_FILTERS)} style={{ flex: 1 }}>{t("venues.clearFilters")}</button>
               <button className="g-btn g-btn--primary" type="button" style={{ flex: 1 }} onClick={() => { update(filterPatch(draft)); setSheet(false); }}>
-                Apply
+                {t("venues.apply")}
                 {countActive(draft) > 0 && <span className="g-fcount" style={{ background: "var(--on-primary)", color: "var(--primary)" }}>{countActive(draft)}</span>}
               </button>
             </div>

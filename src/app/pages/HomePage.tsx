@@ -1,4 +1,5 @@
 import React, { FormEvent, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { BrandMark } from "../components/Brand";
 import { Link, useNavigate } from 'react-router-dom';
 import { messageApi, reviewApi, venueApi } from '../services/api';
@@ -18,23 +19,24 @@ import { apiError } from '../lib/format';
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 function Stats() {
+  const { t } = useTranslation();
   const { data } = useLoader(() => venueApi.stats(), []);
   const fmt = (n?: number) => (n === undefined ? '–' : <CountUp value={n} />);
   return (
-    <section className="g-statsband" aria-label="Golfy in numbers">
+    <section className="g-statsband" aria-label={t('home.stats.label')}>
       <div className="g-wrap">
         <div className="g-stats">
           <Reveal className="g-stat">
             <b>{fmt(data?.totalBookings)}</b>
-            <span className="g-muted">Total bookings</span>
+            <span className="g-muted">{t('home.stats.bookings')}</span>
           </Reveal>
           <Reveal className="g-stat">
             <b>{fmt(data?.totalVenues)}</b>
-            <span className="g-muted">Active venues</span>
+            <span className="g-muted">{t('home.stats.venues')}</span>
           </Reveal>
           <Reveal className="g-stat">
             <b>{fmt(data?.totalUsers)}</b>
-            <span className="g-muted">Active players</span>
+            <span className="g-muted">{t('home.stats.players')}</span>
           </Reveal>
         </div>
       </div>
@@ -43,6 +45,7 @@ function Stats() {
 }
 
 function ContactForm() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [tried, setTried] = useState(false);
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'failed'>(
@@ -86,25 +89,25 @@ function ContactForm() {
       noValidate
     >
       {state === 'sent' && (
-        <Banner info icon="i-check" title="Message sent">
-          Thanks. We'll reply by email as soon as we can.
+        <Banner info icon="i-check" title={t('home.contact.sentTitle')}>
+          {t('home.contact.sentText')}
         </Banner>
       )}
       {state === 'failed' && (
         <Banner
           title={
             tooMany
-              ? 'Too many requests, please try again later!'
-              : 'We could not send your message'
+              ? t('apiError.tooManyRequests')
+              : t('home.contact.failedTitle')
           }
         >
-          {!tooMany && <>Please try again, or email {SUPPORT_EMAIL}.</>}
+          {!tooMany && <>{t('home.contact.failedText', { email: SUPPORT_EMAIL })}</>}
         </Banner>
       )}
       <div className="g-formgrid">
         <div className={`g-field${tried && errors.name ? ' is-invalid' : ''}`}>
           <label className="g-label" htmlFor="cn">
-            Name
+            {t('home.contact.name')}
           </label>
           <input
             className="g-input"
@@ -115,12 +118,12 @@ function ContactForm() {
             maxLength={100}
           />
           {tried && errors.name && (
-            <FieldError>Please add your name.</FieldError>
+            <FieldError>{t('home.contact.nameError')}</FieldError>
           )}
         </div>
         <div className={`g-field${tried && errors.email ? ' is-invalid' : ''}`}>
           <label className="g-label" htmlFor="ce">
-            Email
+            {t('home.contact.email')}
           </label>
           <input
             className="g-input"
@@ -133,24 +136,24 @@ function ContactForm() {
             maxLength={200}
           />
           {tried && errors.email && (
-            <FieldError>Enter an email like you@example.com.</FieldError>
+            <FieldError>{t('home.contact.emailError')}</FieldError>
           )}
         </div>
       </div>
       <div className={`g-field${tried && errors.message ? ' is-invalid' : ''}`}>
         <label className="g-label" htmlFor="cm">
-          Message
+          {t('home.contact.message')}
         </label>
         <textarea
           className="g-textarea"
           id="cm"
-          placeholder="How can we help?"
+          placeholder={t('home.contact.messagePlaceholder')}
           value={form.message}
           onChange={set('message')}
           maxLength={5000}
         />
         {tried && errors.message && (
-          <FieldError>Please add a message.</FieldError>
+          <FieldError>{t('home.contact.messageError')}</FieldError>
         )}
       </div>
       <div>
@@ -160,7 +163,7 @@ function ContactForm() {
           disabled={state === 'sending'}
         >
           {state === 'sending' && <span className="g-spin" />}
-          Send message
+          {t('home.contact.send')}
         </button>
       </div>
     </form>
@@ -168,6 +171,7 @@ function ContactForm() {
 }
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [q, setQ] = useState('');
   const top = useLoader(() => venueApi.top(), []);
@@ -182,15 +186,14 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="g-hero" aria-label="Find a venue">
+      <section className="g-hero" aria-label={t('home.heroLabel')}>
         <div className="g-wrap">
-          <span className="g-eyebrow g-rise d1">Hourly golf booking</span>
+          <span className="g-eyebrow g-rise d1">{t('home.eyebrow')}</span>
           <h1 className="g-rise d1">
-            Golf, booked by the <em>hour</em>.
+            <Trans i18nKey="home.heroTitle" components={{ em: <em /> }} />
           </h1>
           <p className="g-hero-lead g-rise d2">
-            Courses, simulators and practice ranges across Korea. Pick a time
-            that suits you and tee off.
+            {t('home.lead')}
           </p>
           <form
             className="g-searchbar g-rise d3"
@@ -199,7 +202,7 @@ export default function HomePage() {
           >
             <div className="g-field">
               <label className="g-label" htmlFor="hs">
-                Where do you want to play?
+                {t('home.searchLabel')}
               </label>
               <div className="g-iconin g-iconin--search">
                 <BrandMark className="g-iconin-mark" size={22} />
@@ -207,7 +210,7 @@ export default function HomePage() {
                   className="g-input"
                   id="hs"
                   type="search"
-                  placeholder="Try Gangnam or Jeju"
+                  placeholder={t('home.searchPlaceholder')}
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                 />
@@ -215,21 +218,21 @@ export default function HomePage() {
             </div>
             <button className="g-btn g-btn--accent g-btn--lg" type="submit">
               <i className="i i-search" />
-              Find a venue
+              {t('home.find')}
             </button>
           </form>
           <div className="g-hero-chips g-rise d3">
             <Link className="g-hero-chip" to="/venues?type=Course">
               <i className="i i-flag" />
-              Courses
+              {t('footer.courses')}
             </Link>
             <Link className="g-hero-chip" to="/venues?type=Simulator">
               <i className="i i-grid" />
-              Simulators
+              {t('footer.simulators')}
             </Link>
             <Link className="g-hero-chip" to="/venues?type=Range">
               <i className="i i-pin" />
-              Ranges
+              {t('footer.ranges')}
             </Link>
           </div>
         </div>
@@ -239,30 +242,30 @@ export default function HomePage() {
         <div className="g-wrap">
           <div className="g-between" style={{ marginBottom: 8 }}>
             <h2 className="g-h2" style={{ margin: 0 }}>
-              Popular right now
+              {t('home.popular')}
             </h2>
             <Link
               to="/venues"
               className="g-btn g-btn--ghost"
               style={{ gap: 6 }}
             >
-              See all venues <i className="i i-right arrow" />
+              {t('home.seeAll')} <i className="i i-right arrow" />
             </Link>
           </div>
           {top.error && (
             <Banner
-              title="We could not load venues"
+              title={t('home.loadErrorTitle')}
               action={
                 <button
                   className="g-btn g-btn--secondary g-btn--sm"
                   type="button"
                   onClick={top.reload}
                 >
-                  Try again
+                  {t('common.retry')}
                 </button>
               }
             >
-              Something went wrong on our side. Please try again.
+              {t('home.loadErrorText')}
             </Banner>
           )}
           <div
@@ -282,29 +285,20 @@ export default function HomePage() {
       <section className="g-sec g-sec--tint" aria-labelledby="how">
         <div className="g-wrap">
           <h2 className="g-h2" id="how">
-            Three steps to the tee
+            {t('home.stepsTitle')}
           </h2>
           <ol className="g-steps">
             <li className="g-step">
-              <h3>Find a venue</h3>
-              <p>
-                Filter by type, price and rating. Every venue shows what an hour
-                costs.
-              </p>
+              <h3>{t('home.step1')}</h3>
+              <p>{t('home.step1Text')}</p>
             </li>
             <li className="g-step">
-              <h3>Pick your hours</h3>
-              <p>
-                See free slots live for any day and select one hour or several
-                in a row.
-              </p>
+              <h3>{t('home.step2')}</h3>
+              <p>{t('home.step2Text')}</p>
             </li>
             <li className="g-step">
-              <h3>Pay and play</h3>
-              <p>
-                Your slot is held for 60 minutes while you check out. Review the
-                venue after you play.
-              </p>
+              <h3>{t('home.step3')}</h3>
+              <p>{t('home.step3Text')}</p>
             </li>
           </ol>
         </div>
@@ -314,7 +308,7 @@ export default function HomePage() {
 
       <section className="g-sec">
         <div className="g-wrap">
-          <h2 className="g-h2">What players say</h2>
+          <h2 className="g-h2">{t('home.reviewsTitle')}</h2>
           <div className="g-cards" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             {reviews.loading &&
               [1, 2, 3].map((k) => (
@@ -325,20 +319,15 @@ export default function HomePage() {
                 </div>
               ))}
             {reviews.data?.length === 0 && (
-              <p className="g-muted">
-                No reviews yet. Be the first after you play.
-              </p>
+              <p className="g-muted">{t('home.noReviews')}</p>
             )}
             {reviews.data?.map((r, i) => {
-              const name = r.userData?.[0]?.name ?? 'Golfy player';
+              const name = r.userData?.[0]?.name ?? t('home.anonymous');
               return (
                 <Reveal key={r._id} delay={i * 110} style={{ display: 'flex' }}>
                   <article className="g-card" style={{ flex: 1 }}>
                     <div className="g-card-body" style={{ gap: 12 }}>
-                      <Stars
-                        value={r.rating}
-                        label={`${r.rating} out of 5 stars`}
-                      />
+                      <Stars value={r.rating} />
                       <p>{r.comment}</p>
                       <div className="g-row" style={{ marginTop: 4 }}>
                         <span className="g-avatar" aria-hidden="true">
@@ -366,11 +355,14 @@ export default function HomePage() {
           <div className="g-two">
             <div style={{ flex: '1 1 300px' }}>
               <h2 className="g-h2" style={{ marginBottom: 8 }}>
-                Get in touch
+                {t('home.contact.title')}
               </h2>
               <p className="g-muted">
-                Question about a booking or a venue? Send us a note, or email{' '}
-                <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+                <Trans
+                  i18nKey="home.contact.text"
+                  values={{ email: SUPPORT_EMAIL }}
+                  components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} /> }}
+                />
               </p>
             </div>
             <ContactForm />

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrandLogo } from './Brand';
+import { LangToggle } from './LangToggle';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { SUPPORT_EMAIL } from '../lib/config';
 import { useAuth } from '../context/AuthContext';
 import { useIsMobile, useTheme } from '../hooks/useMedia';
 
 function Header({ theme }: { theme: string }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
@@ -22,42 +25,42 @@ function Header({ theme }: { theme: string }) {
   return (
     <header className="g-top">
       <div className="g-wrap g-top-in">
-        <Link className="g-word" to="/" aria-label="Golfy, home">
+        <Link className="g-word" to="/" aria-label={t('nav.home')}>
           <BrandLogo />
         </Link>
         <span className="g-sp" />
         <button
           className="g-iconbtn g-menubtn"
           type="button"
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}
           aria-expanded={open}
           aria-controls="main-nav"
           onClick={() => setOpen(!open)}
         >
           <i className={`i ${open ? 'i-x' : 'i-menu'}`} />
         </button>
-        <nav id="main-nav" className="g-nav" aria-label="Main" data-open={open}>
+        <nav id="main-nav" className="g-nav" aria-label={t('nav.main')} data-open={open}>
           <NavLink className="g-navl" to="/venues">
-            Venues
+            {t('nav.venues')}
           </NavLink>
           {!user && (
             <>
               <NavLink className="g-navl" to="/login">
-                Log in
+                {t('nav.login')}
               </NavLink>
               <Link className="g-navl g-navl--cta" to="/signup">
-                Sign up
+                {t('nav.signup')}
               </Link>
             </>
           )}
           {user && (
             <>
               <NavLink className="g-navl" to="/bookings">
-                My bookings
+                {t('nav.myBookings')}
               </NavLink>
               <NavLink className="g-navl" to="/favourites">
                 <i className="i i-heart" />
-                Favourites
+                {t('nav.favourites')}
               </NavLink>
               <NavLink className="g-navl" to="/profile">
                 <i className="i i-user" />
@@ -65,6 +68,7 @@ function Header({ theme }: { theme: string }) {
               </NavLink>
             </>
           )}
+          <LangToggle className="g-lang--nav" />
         </nav>
       </div>
     </header>
@@ -78,57 +82,60 @@ function Footer({
   theme: string;
   onToggleTheme: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <footer className="g-foot">
       <div className="g-wrap">
         <div className="g-foot-grid">
           <div className="g-foot-brand">
             <img src="/brand/golfy-logo-light.svg" alt="Golfy" width="102" height="38" />
-            <p>
-              Find a venue, pick a time, play. Courses, simulators and ranges,
-              booked by the hour.
-            </p>
+            <p>{t('footer.tagline')}</p>
           </div>
-          <nav aria-label="Explore">
-            <h2>Explore</h2>
+          <nav aria-label={t('footer.explore')}>
+            <h2>{t('footer.explore')}</h2>
             <ul>
               <li>
-                <Link to="/venues">All venues</Link>
+                <Link to="/venues">{t('footer.allVenues')}</Link>
               </li>
               <li>
-                <Link to="/venues?type=Course">Courses</Link>
+                <Link to="/venues?type=Course">{t('footer.courses')}</Link>
               </li>
               <li>
-                <Link to="/venues?type=Simulator">Simulators</Link>
+                <Link to="/venues?type=Simulator">{t('footer.simulators')}</Link>
               </li>
               <li>
-                <Link to="/venues?type=Range">Ranges</Link>
+                <Link to="/venues?type=Range">{t('footer.ranges')}</Link>
               </li>
             </ul>
           </nav>
-          <nav aria-label="Support">
-            <h2>Support</h2>
+          <nav aria-label={t('footer.support')}>
+            <h2>{t('footer.support')}</h2>
             <ul>
               <li>
                 <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
               </li>
               <li>
-                <Link to="/bookings">My bookings</Link>
+                <Link to="/bookings">{t('nav.myBookings')}</Link>
               </li>
             </ul>
           </nav>
         </div>
         <div className="g-foot-base">
-          <span>Golfy. A portfolio project with fictional venues. <Link to="/credits">Photo credits</Link></span>
-          <button
-            className="g-themebtn"
-            type="button"
-            onClick={onToggleTheme}
-            aria-pressed={theme === 'dark'}
-          >
-            <i className={`i ${theme === 'dark' ? 'i-sun' : 'i-moon'}`} />
-            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-          </button>
+          <span>
+            {t('footer.note')} <Link to="/credits">{t('footer.photoCredits')}</Link>
+          </span>
+          <span className="g-foot-tools">
+            <LangToggle />
+            <button
+              className="g-themebtn"
+              type="button"
+              onClick={onToggleTheme}
+              aria-pressed={theme === 'dark'}
+            >
+              <i className={`i ${theme === 'dark' ? 'i-sun' : 'i-moon'}`} />
+              {theme === 'dark' ? t('footer.lightMode') : t('footer.darkMode')}
+            </button>
+          </span>
         </div>
       </div>
     </footer>

@@ -1,9 +1,15 @@
+import i18n, { currentLang } from "../../i18n";
+import { translateApiMessage } from "../../i18n/apiMessages";
 import { serverApi } from "./config";
 import { VenueType } from "./enums";
-import { KST_TIME_ZONE, kstSlotEnded } from "./kst";
+import { kstParts, kstSlotEnded } from "./kst";
 import { Venue } from "./types";
 
-export const money = (n: number) => `$${Number(n).toFixed(2)}`;
+// All prices are Korean won, shown as ₩ with ko-KR grouping in both languages ("₩38,000").
+export const money = (n: number) => `₩${Math.round(Number(n)).toLocaleString("ko-KR")}`;
+
+/** plain grouped number ("1,234") */
+export const formatNumber = (n: number) => Number(n).toLocaleString("ko-KR");
 
 export const pad2 = (n: number) => String(n).padStart(2, "0");
 
@@ -26,23 +32,30 @@ export const initials = (name = "") =>
     .map((p) => p[0]?.toUpperCase() ?? "")
     .join("") || "?";
 
-export const typeLabel = (t?: VenueType) =>
-  t === "SIMULATOR" ? "Simulator" : t === "RANGE" ? "Range" : "Course";
+export const typeLabel = (t?: VenueType) => i18n.t(`venueType.${t === "SIMULATOR" || t === "RANGE" ? t : "COURSE"}`);
 
-// the booking day is a KST calendar day (stored as 00:00 KST), so days are always shown in KST
-export const formatDay = (iso: string) =>
-  new Date(iso)
-    .toLocaleDateString("en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      timeZone: KST_TIME_ZONE,
-    })
-    .replace(",", "");
+const EN_WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const EN_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const KO_WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
-export const formatShortDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: KST_TIME_ZONE });
+// The booking day is a KST calendar day (stored as 00:00 KST), so days are always shown in KST.
+// Korean: "2026년 11월 3일 (화)"   English: "Tue 3 Nov 2026"
+export const formatDay = (iso: string, lang = currentLang()) => {
+  const p = kstParts(iso);
+  return lang === "ko"
+    ? `${p.y}년 ${p.m}월 ${p.d}일 (${KO_WEEKDAYS[p.weekday]})`
+    : `${EN_WEEKDAYS[p.weekday]} ${p.d} ${EN_MONTHS[p.m - 1]} ${p.y}`;
+};
+
+/** Korean: "2026년 11월 3일"   English: "3 Nov 2026" */
+export const formatShortDate = (iso: string, lang = currentLang()) => {
+  const p = kstParts(iso);
+  return lang === "ko" ? `${p.y}년 ${p.m}월 ${p.d}일` : `${p.d} ${EN_MONTHS[p.m - 1]} ${p.y}`;
+};
+
+/** calendar heading from a "YYYY-MM-DD" key + weekday (0 = Sunday): "11월 3일 (화)" / "Tue 3 Nov" */
+export const formatCalendarDay = (m: number, d: number, weekday: number, lang = currentLang()) =>
+  lang === "ko" ? `${m}월 ${d}일 (${KO_WEEKDAYS[weekday]})` : `${EN_WEEKDAYS[weekday]} ${d} ${EN_MONTHS[m - 1]}`;
 
 export const bookingRef = (id: string) => `GLF-${id.slice(-6).toUpperCase()}`;
 
@@ -60,18 +73,20 @@ export const isPopular = (v: Venue) => v.bookingCount >= 20;
 
 export const ratingText = (v: Venue) => {
   const count = v.reviewCount ?? 0;
-  return count > 0 ? `${(v.avgRating ?? 0).toFixed(1)}` : "New";
+  return count > 0 ? `${(v.avgRating ?? 0).toFixed(1)}` : i18n.t("common.new");
 };
 
 export const reviewsText = (v: Venue) => {
   const count = v.reviewCount ?? 0;
-  return count === 0 ? "No reviews yet" : count === 1 ? "1 review" : `${count} reviews`;
+  return count === 0 ? i18n.t("venueCard.noReviewsYet") : i18n.t("venueCard.reviews", { count, n: formatNumber(count) });
 };
 
 // has the booked slot already ended? (end time is KST wall-clock on the booking's KST day)
 export const slotEnded = (bookingDate: string, endTime: string) => kstSlotEnded(bookingDate, endTime);
 
-export const apiError = (err: any): { status?: number; message: string } => ({
+/** status and (translated) message of a failed API call; unknown messages stay as the backend sent them */
+export const apiError = (err: any): { status?: number; message: string; raw: string } => ({
   status: err?.response?.status,
-  message: err?.response?.data?.message ?? "",
+  message: translateApiMessage(err?.response?.data?.message ?? ""),
+  raw: err?.response?.data?.message ?? "", // untranslated backend text, for logic only
 });

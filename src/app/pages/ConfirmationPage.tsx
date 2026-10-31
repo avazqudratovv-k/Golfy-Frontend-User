@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { kstWallClockToUtcStamp } from "../lib/kst";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { bookingApi } from "../services/api";
@@ -13,7 +14,7 @@ import { Confetti } from "../components/Motion";
 import { Booking } from "../lib/types";
 
 // builds a calendar file; start/end are KST wall-clock times, written as UTC instants so every calendar app agrees
-function calendarFile(b: Booking) {
+function calendarFile(b: Booking, t: (k: string, o?: any) => string) {
   const venue = b.venueData?.[0];
   const stamp = (time: string) => kstWallClockToUtcStamp(b.bookingDate, time);
   const now = new Date();
@@ -27,15 +28,16 @@ function calendarFile(b: Booking) {
     `DTSTAMP:${created}`,
     `DTSTART:${stamp(b.startTime)}`,
     `DTEND:${stamp(b.endTime)}`,
-    `SUMMARY:Golfy: ${venue?.venueName ?? "Booking"}`,
+    `SUMMARY:${t("confirm.calendarSummary", { name: venue?.venueName ?? t("confirm.calendarBooking") })}`,
     `LOCATION:${venue?.venueName ?? ""}, ${venue?.venueLocation ?? ""}`,
-    `DESCRIPTION:Booking ${bookingRef(b._id)}`,
+    `DESCRIPTION:${t("confirm.calendarBooking")} ${bookingRef(b._id)}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
 }
 
 export default function ConfirmationPage() {
+  const { t } = useTranslation();
   const { id = "" } = useParams();
   const { user } = useAuth();
   const toast = useToast();
@@ -53,9 +55,9 @@ export default function ConfirmationPage() {
     const missing = apiError(error).status === 404;
     return (
       <main className="g-mainpage"><div className="g-wrap" style={{ maxWidth: 600 }}>
-        <EmptyState icon="i-ticket" title={missing ? "Booking not found" : "We could not load your receipt"}
-          text={missing ? "It may belong to another account, or the link is wrong." : "Something went wrong on our side. Please try again."}
-          action={<div className="g-row"><Link className="g-btn g-btn--primary" to="/bookings">My bookings</Link>{!missing && <button className="g-btn g-btn--secondary" type="button" onClick={reload}>Try again</button>}</div>} />
+        <EmptyState icon="i-ticket" title={missing ? t("bk.notFound") : t("confirm.loadFailed")}
+          text={missing ? t("bk.notFoundText") : t("bk.loadFailedText")}
+          action={<div className="g-row"><Link className="g-btn g-btn--primary" to="/bookings">{t("bk.myBookings")}</Link>{!missing && <button className="g-btn g-btn--secondary" type="button" onClick={reload}>{t("common.retry")}</button>}</div>} />
       </div></main>
     );
   }
@@ -67,7 +69,7 @@ export default function ConfirmationPage() {
   const cancelled = booking.status === BookingStatus.CANCELLED;
 
   const addToCalendar = () => {
-    const blob = new Blob([calendarFile(booking)], { type: "text/calendar;charset=utf-8" });
+    const blob = new Blob([calendarFile(booking, t)], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -76,7 +78,7 @@ export default function ConfirmationPage() {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast("Calendar file ready: golfy-booking.ics");
+    toast(t("confirm.calendarReady"));
   };
 
   return (
@@ -85,12 +87,12 @@ export default function ConfirmationPage() {
         <div style={{ display: "grid", gap: 8, justifyItems: "center", textAlign: "center" }} role="status">
           {!cancelled && <Confetti storageKey={`golfy-confetti-${booking._id}`} />}
           <span className="g-okmark"><i className={`i i-lg ${cancelled ? "i-slash" : "i-check"}`} /></span>
-          <h1 className="g-h1">{cancelled ? "Booking cancelled" : "You're booked"}</h1>
-          <p className="g-muted">{cancelled ? "This booking was cancelled, so this receipt is no longer valid." : "Keep this receipt for your records."}</p>
+          <h1 className="g-h1">{cancelled ? t("bk.cancelled") : t("confirm.booked")}</h1>
+          <p className="g-muted">{cancelled ? t("confirm.cancelledText") : t("confirm.keepReceipt")}</p>
         </div>
 
-        <article className="g-receipt" aria-label="Booking receipt">
-          <div className={`g-photo${venue?.venueImages?.[0] ? " has-img" : ""}`} style={photoStyle(venue?.venueImages?.[0])} role="img" aria-label={`Photo of ${venue?.venueName}`}>
+        <article className="g-receipt" aria-label={t("confirm.receipt")}>
+          <div className={`g-photo${venue?.venueImages?.[0] ? " has-img" : ""}`} style={photoStyle(venue?.venueImages?.[0])} role="img" aria-label={t("venueCard.photoOf", { name: venue?.venueName })}>
             <div className="g-photo-cap">
               <h3>{venue?.venueName}</h3>
               <div className="g-meta" style={{ color: "#fff" }}><i className="i i-pin" />{venue?.venueLocation}</div>
@@ -98,29 +100,29 @@ export default function ConfirmationPage() {
           </div>
           <div className="g-receipt-body">
             <div className="g-between">
-              <div><span className="g-cap">Booking reference</span><div className="g-ref">{bookingRef(booking._id)}</div></div>
+              <div><span className="g-cap">{t("confirm.reference")}</span><div className="g-ref">{bookingRef(booking._id)}</div></div>
               <StatusBadge status={booking.status} />
             </div>
             <div className="g-tear" aria-hidden="true" />
             <div>
-              <div className="g-kv"><span>Date</span><span>{formatDay(booking.bookingDate)}</span></div>
-              <div className="g-kv"><span>Time</span><span>{booking.startTime} - {booking.endTime} ({hours} {hours === 1 ? "hour" : "hours"})</span></div>
-              <div className="g-kv"><span>Price per hour</span><span>{money(venue?.pricePerHour ?? 0)}</span></div>
-              <div className="g-kv"><span>Booked by</span><span>{user?.name}</span></div>
+              <div className="g-kv"><span>{t("bk.date")}</span><span>{formatDay(booking.bookingDate)}</span></div>
+              <div className="g-kv"><span>{t("bk.time")}</span><span>{booking.startTime} - {booking.endTime} ({t("bk.hours", { count: hours })})</span></div>
+              <div className="g-kv"><span>{t("bk.pricePerHour")}</span><span>{money(venue?.pricePerHour ?? 0)}</span></div>
+              <div className="g-kv"><span>{t("confirm.bookedBy")}</span><span>{user?.name}</span></div>
             </div>
-            <div className="g-total"><span style={{ fontWeight: 600 }}>Total paid</span><b>{money(booking.price)}</b></div>
+            <div className="g-total"><span style={{ fontWeight: 600 }}>{t("confirm.totalPaid")}</span><b>{money(booking.price)}</b></div>
           </div>
         </article>
 
         <div className="g-row" style={{ justifyContent: "center" }}>
           {!cancelled && (
-            <button className="g-btn g-btn--secondary" type="button" onClick={addToCalendar}><i className="i i-calplus" />Add to calendar</button>
+            <button className="g-btn g-btn--secondary" type="button" onClick={addToCalendar}><i className="i i-calplus" />{t("confirm.addToCalendar")}</button>
           )}
-          <Link className="g-btn g-btn--primary" to="/bookings">View my bookings</Link>
-          <Link className="g-btn g-btn--ghost" to={`/venues/${booking.venueId}`}>Book another time</Link>
+          <Link className="g-btn g-btn--primary" to="/bookings">{t("confirm.viewBookings")}</Link>
+          <Link className="g-btn g-btn--ghost" to={`/venues/${booking.venueId}`}>{t("confirm.bookAnother")}</Link>
         </div>
         <p className="g-hint" style={{ textAlign: "center" }}>
-          Need to change something? You can cancel from My bookings, or email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+          <Trans i18nKey="confirm.help" values={{ email: SUPPORT_EMAIL }} components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} /> }} />
         </p>
       </div>
     </main>

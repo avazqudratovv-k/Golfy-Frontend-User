@@ -1,4 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../services/api";
 import { useLoader } from "../hooks/useMedia";
@@ -13,6 +14,7 @@ const PHONE_RE = /^\+?[\d\s().-]{7,20}$/;
 const MAX_AVATAR = 5 * 1024 * 1024;
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const { user, setUser, logout } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
@@ -40,8 +42,8 @@ export default function ProfilePage() {
     const f = e.target.files?.[0];
     e.target.value = "";
     if (!f) return;
-    if (!f.type.startsWith("image/")) return setAvatarErr("Only image files are allowed.");
-    if (f.size > MAX_AVATAR) return setAvatarErr("That image is over 5MB. Choose a smaller one.");
+    if (!f.type.startsWith("image/")) return setAvatarErr(t("profile.avatarType"));
+    if (f.size > MAX_AVATAR) return setAvatarErr(t("profile.avatarSize"));
     setAvatarErr("");
     setFile(f);
     setPreview(URL.createObjectURL(f));
@@ -75,10 +77,10 @@ export default function ProfilePage() {
       setCurrent("");
       setNext("");
       setTried(false);
-      toast("Profile saved.");
+      toast(t("profile.saved"));
     } catch (err) {
-      const { status, message } = apiError(err);
-      setProblem(status === 429 ? "tooMany" : status === 401 ? "wrongPass" : /phone/i.test(message) && /already/i.test(message) ? "phoneUsed" : "server");
+      const { status, raw } = apiError(err);
+      setProblem(status === 429 ? "tooMany" : status === 401 ? "wrongPass" : /phone/i.test(raw) && /already/i.test(raw) ? "phoneUsed" : "server");
     } finally {
       setSaving(false);
     }
@@ -99,71 +101,71 @@ export default function ProfilePage() {
     <main className="g-mainpage">
       <div className="g-wrap" style={{ maxWidth: 760, display: "grid", gap: 24 }}>
         <PageHeader
-          title="Profile"
-          subtitle="Your details and password."
-          actions={<button className="g-btn g-btn--secondary" type="button" onClick={doLogout}><i className="i i-logout" />Log out</button>}
+          title={t("profile.title")}
+          subtitle={t("profile.subtitle")}
+          actions={<button className="g-btn g-btn--secondary" type="button" onClick={doLogout}><i className="i i-logout" />{t("profile.logout")}</button>}
         />
 
         {error && (
-          <Banner title="We could not load your profile" action={<button className="g-btn g-btn--secondary g-btn--sm" type="button" onClick={reload}>Try again</button>}>
-            Showing what we have saved on this device.
+          <Banner title={t("profile.loadFailed")} action={<button className="g-btn g-btn--secondary g-btn--sm" type="button" onClick={reload}>{t("common.retry")}</button>}>
+            {t("profile.loadFailedText")}
           </Banner>
         )}
-        {problem === "server" && <Banner title="We could not save your profile">Something went wrong on our side. Please try again.</Banner>}
-        {problem === "tooMany" && <Banner title="Too many requests, please try again later!" />}
+        {problem === "server" && <Banner title={t("profile.saveFailed")}>{t("bk.loadFailedText")}</Banner>}
+        {problem === "tooMany" && <Banner title={t("apiError.tooManyRequests")} />}
 
         <form className="g-box" onSubmit={save} noValidate>
           <div className="g-row" style={{ gap: 16 }}>
-            <span className={`g-avatar-lg${avatar ? " g-avatar-img" : ""}`} style={avatar ? { backgroundImage: `url("${avatar}")` } : undefined} role="img" aria-label="Your avatar">
+            <span className={`g-avatar-lg${avatar ? " g-avatar-img" : ""}`} style={avatar ? { backgroundImage: `url("${avatar}")` } : undefined} role="img" aria-label={t("profile.avatarAria")}>
               {avatar ? "" : initials(name)}
             </span>
             <div style={{ display: "grid", gap: 6 }}>
-              <span className="g-label">Avatar</span>
+              <span className="g-label">{t("profile.avatar")}</span>
               <label className="g-btn g-btn--secondary g-btn--sm g-filebtn">
-                <i className="i i-up" />Change photo
-                <input type="file" accept="image/*" aria-label="Upload a new avatar" onChange={pickAvatar} />
+                <i className="i i-up" />{t("profile.changePhoto")}
+                <input type="file" accept="image/*" aria-label={t("profile.uploadAria")} onChange={pickAvatar} />
               </label>
-              <span className="g-hint">Images only, max 5MB.{file ? " Saved when you press Save changes." : ""}</span>
+              <span className="g-hint">{t("profile.avatarHint")}{file ? t("profile.avatarSaved") : ""}</span>
               {avatarErr && <span className="g-msg" role="alert"><i className="i i-alert" />{avatarErr}</span>}
             </div>
           </div>
 
           <div className="g-formgrid">
             <div className={`g-field${tried && errs.name ? " is-invalid" : ""}`}>
-              <label className="g-label" htmlFor="pn">Full name</label>
+              <label className="g-label" htmlFor="pn">{t("profile.fullName")}</label>
               <input className="g-input" id="pn" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
-              {tried && errs.name && <FieldError>Please add your name.</FieldError>}
+              {tried && errs.name && <FieldError>{t("profile.nameError")}</FieldError>}
             </div>
             <div className={`g-field${(tried && errs.phone) || problem === "phoneUsed" ? " is-invalid" : ""}`}>
-              <label className="g-label" htmlFor="pp">Phone</label>
+              <label className="g-label" htmlFor="pp">{t("profile.phone")}</label>
               <input className="g-input g-num" id="pp" type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => { setPhone(e.target.value); setProblem(null); }} />
-              {tried && errs.phone && <FieldError>Enter a phone number with country code.</FieldError>}
-              {problem === "phoneUsed" && <FieldError>This phone number is already in use.</FieldError>}
+              {tried && errs.phone && <FieldError>{t("profile.phoneError")}</FieldError>}
+              {problem === "phoneUsed" && <FieldError>{t("profile.phoneUsed")}</FieldError>}
             </div>
             <div className="g-field">
-              <label className="g-label" htmlFor="pe">Email <small>(not editable)</small></label>
+              <label className="g-label" htmlFor="pe">{t("profile.email")} <small>{t("profile.notEditable")}</small></label>
               <input className="g-input" id="pe" value={profile?.email ?? user?.email ?? ""} readOnly />
             </div>
             <div className="g-field">
-              <label className="g-label" htmlFor="pr">Role <small>(not editable)</small></label>
-              <input className="g-input" id="pr" value={(profile?.role ?? user?.role) === UserRole.ADMIN ? "Admin" : "Player"} readOnly />
+              <label className="g-label" htmlFor="pr">{t("profile.role")} <small>{t("profile.notEditable")}</small></label>
+              <input className="g-input" id="pr" value={(profile?.role ?? user?.role) === UserRole.ADMIN ? t("profile.roleAdmin") : t("profile.rolePlayer")} readOnly />
             </div>
           </div>
 
           <div style={{ borderTop: "1px solid var(--line)", paddingTop: 16, display: "grid", gap: 16 }}>
-            <h2 style={{ fontSize: 19 }}>Change password</h2>
+            <h2 style={{ fontSize: 19 }}>{t("profile.changePassword")}</h2>
             <div className="g-formgrid">
               <div className={`g-field${(tried && errs.current) || problem === "wrongPass" ? " is-invalid" : ""}`}>
-                <label className="g-label" htmlFor="pc">Current password</label>
+                <label className="g-label" htmlFor="pc">{t("profile.currentPassword")}</label>
                 <input className="g-input" id="pc" type="password" autoComplete="current-password" value={current} onChange={(e) => { setCurrent(e.target.value); setProblem(null); }} />
-                {tried && errs.current && <FieldError>Enter your current password.</FieldError>}
-                {problem === "wrongPass" && <FieldError>That password is not right. Try again.</FieldError>}
+                {tried && errs.current && <FieldError>{t("profile.currentError")}</FieldError>}
+                {problem === "wrongPass" && <FieldError>{t("profile.wrongPass")}</FieldError>}
               </div>
               <div className={`g-field${tried && errs.newPass ? " is-invalid" : ""}`}>
-                <label className="g-label" htmlFor="pw">New password</label>
+                <label className="g-label" htmlFor="pw">{t("profile.newPassword")}</label>
                 <input className="g-input" id="pw" type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
-                <span className="g-hint">Leave blank to keep your current password.</span>
-                {tried && errs.newPass && <FieldError>Use at least 8 characters.</FieldError>}
+                <span className="g-hint">{t("profile.newHint")}</span>
+                {tried && errs.newPass && <FieldError>{t("profile.newError")}</FieldError>}
               </div>
             </div>
           </div>
@@ -171,7 +173,7 @@ export default function ProfilePage() {
           <div className="g-row" style={{ justifyContent: "flex-end" }}>
             <button className="g-btn g-btn--primary" type="submit" disabled={saving} aria-busy={saving}>
               {saving && <span className="g-spin" />}
-              {saving ? "Saving" : "Save changes"}
+              {saving ? t("profile.saving") : t("profile.save")}
             </button>
           </div>
         </form>

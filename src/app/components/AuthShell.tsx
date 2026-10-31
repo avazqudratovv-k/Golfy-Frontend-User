@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 import { Link } from 'react-router-dom';
 import { FieldError } from './ui';
 import { Confetti } from './Motion';
@@ -6,11 +8,7 @@ import { Confetti } from './Motion';
 const prefersReduced = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const POINTS = [
-  { icon: 'i-clock', text: 'Book by the hour, no phone calls' },
-  { icon: 'i-cal', text: 'See free slots live for any day' },
-  { icon: 'i-star', text: 'Review venues after you play' },
-];
+const POINT_ICONS = ['i-clock', 'i-cal', 'i-star'];
 
 /** the split-screen frame shared by log in and sign up */
 export function AuthShell({
@@ -22,6 +20,8 @@ export function AuthShell({
   next: string | null;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
+  const points = t('auth.points', { returnObjects: true }) as unknown as string[];
   const suffix = next ? `?next=${encodeURIComponent(next)}` : '';
   return (
     <main className="g-authx">
@@ -29,22 +29,18 @@ export function AuthShell({
         <img className="g-authx-logo" src="/brand/golfy-logo-light.svg" alt="" aria-hidden="true" width="128" height="48" />
         <div className="g-authx-copy">
           <h2>
-            {mode === 'login'
-              ? 'Your tee time is one tap away.'
-              : 'Create your account in a minute.'}
+            {mode === 'login' ? t('auth.loginTitle') : t('auth.signupTitle')}
           </h2>
           <p className="lead">
-            {mode === 'login'
-              ? 'Log in to see your bookings, favourites and the best slots for this weekend.'
-              : 'Courses, simulators and ranges, booked by the hour. Free to join.'}
+            {mode === 'login' ? t('auth.loginLead') : t('auth.signupLead')}
           </p>
           <ul className="g-authx-points">
-            {POINTS.map((p, i) => (
-              <li key={p.text} style={{ '--n': i } as React.CSSProperties}>
+            {points.map((text, i) => (
+              <li key={text} style={{ '--n': i } as React.CSSProperties}>
                 <span className="ic">
-                  <i className={`i ${p.icon}`} />
+                  <i className={`i ${POINT_ICONS[i]}`} />
                 </span>
-                {p.text}
+                {text}
               </li>
             ))}
           </ul>
@@ -56,19 +52,19 @@ export function AuthShell({
           <nav
             className="g-seg"
             data-active={mode === 'signup' ? 1 : 0}
-            aria-label="Account"
+            aria-label={t('auth.account')}
           >
             <Link
               to={`/login${suffix}`}
               aria-current={mode === 'login' ? 'page' : undefined}
             >
-              Log in
+              {t('auth.login')}
             </Link>
             <Link
               to={`/signup${suffix}`}
               aria-current={mode === 'signup' ? 'page' : undefined}
             >
-              Sign up
+              {t('auth.signup')}
             </Link>
           </nav>
           {children}
@@ -104,6 +100,7 @@ export function IconField({
   React.InputHTMLAttributes<HTMLInputElement>,
   'onChange' | 'value' | 'type' | 'id'
 >) {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const isPassword = type === 'password';
   return (
@@ -126,7 +123,7 @@ export function IconField({
           <button
             className="g-iconbtn"
             type="button"
-            aria-label={show ? 'Hide password' : 'Show password'}
+            aria-label={show ? t('auth.hidePassword') : t('auth.showPassword')}
             aria-pressed={show}
             onClick={() => setShow(!show)}
           >
@@ -142,7 +139,7 @@ export function IconField({
 
 export function strengthOf(pw: string) {
   if (!pw) return { level: 0, label: '' };
-  if (pw.length < 8) return { level: 1, label: 'Too short' };
+  if (pw.length < 8) return { level: 1, label: i18n.t('auth.strength.tooShort') };
   const score =
     1 +
     (/[a-z]/.test(pw) && /[A-Z]/.test(pw) ? 1 : 0) +
@@ -150,11 +147,12 @@ export function strengthOf(pw: string) {
     (/[^A-Za-z0-9]/.test(pw) || pw.length >= 12 ? 1 : 0);
   return {
     level: Math.min(4, score),
-    label: ['', 'Weak', 'Okay', 'Good', 'Strong'][Math.min(4, score)],
+    label: ['', i18n.t('auth.strength.weak'), i18n.t('auth.strength.okay'), i18n.t('auth.strength.good'), i18n.t('auth.strength.strong')][Math.min(4, score)],
   };
 }
 
 export function StrengthMeter({ password }: { password: string }) {
+  const { t } = useTranslation();
   const { level, label } = strengthOf(password);
   return (
     <div style={{ display: 'grid', gap: 6 }}>
@@ -164,7 +162,7 @@ export function StrengthMeter({ password }: { password: string }) {
         ))}
       </div>
       <span className="g-hint" aria-live="polite">
-        {password ? `Password strength: ${label}` : 'At least 8 characters.'}
+        {password ? t('auth.strengthLine', { label }) : t('auth.minChars')}
       </span>
     </div>
   );
@@ -180,6 +178,7 @@ export function AuthSuccess({
   subtitle: string;
   onContinue: () => void;
 }) {
+  const { t } = useTranslation();
   const go = useRef(onContinue);
   go.current = onContinue;
   const [sparkKey] = useState(() => `golfy-welcome-${Date.now()}`);
@@ -209,7 +208,7 @@ export function AuthSuccess({
           type="button"
           onClick={onContinue}
         >
-          Continue <i className="i i-right arrow" />
+          {t('auth.continue')} <i className="i i-right arrow" />
         </button>
       </div>
     </div>
