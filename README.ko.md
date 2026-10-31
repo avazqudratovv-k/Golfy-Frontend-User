@@ -4,11 +4,11 @@
 
 [English](README.md) · [한국어](README.ko.md)
 
-![tests](https://img.shields.io/badge/tests-33%20passing-2e7d32) ![i18n](https://img.shields.io/badge/UI-한국어%20%7C%20EN-0F3D2E) ![timezone](https://img.shields.io/badge/시간-KST-E8743B)
+[![CI](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml/badge.svg?branch=portfolio-v2)](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml) ![i18n](https://img.shields.io/badge/UI-한국어%20%7C%20EN-0F3D2E) ![timezone](https://img.shields.io/badge/시간-KST-E8743B)
 
 **Golfy**는 골프장, 스크린골프, 골프연습장을 1시간 단위로 예약하는 서비스이고, 이 저장소는 회원용 웹 앱입니다. 시설을 찾고, 빈 시간을 확인하고, 예약하고, 결제(시뮬레이션)하고, 리뷰를 남길 수 있습니다. 포트폴리오 프로젝트이며 시설은 모두 가상의 데모 데이터입니다.
 
-**세 저장소:** [golfy-backend](../GOLFY%20Backend)(API: 회원 `:3011` / 관리자 `:3012`) · **golfy-frontend**(이 앱, `:3000`) · [golfy-admin](../../golfy-admin)(직원용 대시보드, `:3001`). 세 앱이 어떻게 연결되는지는 백엔드 README에 10줄로 정리되어 있습니다.
+**세 저장소:** [golfy-backend](https://github.com/avazqudratovv-mit/Golfy-backend)(API: 회원 `:3011` / 관리자 `:3012`) · **[golfy-frontend](https://github.com/avazqudratovv-mit/Golfy-Frontend-User)**(이 앱, `:3000`) · [golfy-admin](https://github.com/avazqudratovv-mit/Golfy-Frontend-Admin)(직원용 대시보드, `:3001`). 세 앱이 어떻게 연결되는지는 백엔드 README에 10줄로 정리되어 있습니다.
 
 | 홈 (KO) | 시설 목록 (EN, 다크) | 시설 상세 (KO, 모바일) | 홈 (EN, 모바일, 다크) |
 | --- | --- | --- | --- |
@@ -63,7 +63,7 @@ yarn typecheck && yarn lint && yarn test --watchAll=false && yarn build
 yarn e2e          # 선택: :3011에 시드가 있는 백엔드와 `yarn start` 필요, 설치된 Chrome 사용
 ```
 
-[백엔드](../GOLFY%20Backend)를 `npm run seed:reset` 후 실행해야 합니다. 데모 회원: `minjun@seed.golfy.dev` / `Password123!`
+[백엔드](https://github.com/avazqudratovv-mit/Golfy-backend)를 `npm run seed:reset` 후 실행해야 합니다. 데모 회원: `minjun@seed.golfy.dev` / `Password123!`
 
 | 변수 | 설명 |
 | --- | --- |
