@@ -41,7 +41,6 @@ export default function FavouritesPage() {
     <main className="g-mainpage">
       <div className="g-wrap" style={{ display: "grid", gap: 24 }}>
         <PageHeader
-          variant="hearts"
           title="Favourites"
           subtitle="Venues you saved for next time."
           actions={

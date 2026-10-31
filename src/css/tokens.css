@@ -1,0 +1,139 @@
+/* Golfy design tokens: "clubhouse at golden hour".
+   This file is identical in golfy-frontend and golfy-admin. Change it in both. */
+
+:root,
+[data-theme="light"] {
+  /* surfaces */
+  --bg: #F6F2E9;            /* warm off-white page */
+  --bg-deep: #EDE6D6;       /* bands, footers on light */
+  --surface: #FFFFFF;
+  --surface-sunken: #EFE9DB;
+  --line: #E4DCC9;
+  --line-strong: #858A7E;   /* >= 3:1 on surface, for input borders and controls */
+
+  /* text */
+  --ink: #14231B;
+  --ink-muted: #55625A;     /* 5.6:1 on --bg */
+
+  /* brand: fairway green */
+  --primary: #0F3D2E;
+  --primary-hover: #0A2D22;
+  --on-primary: #FFFFFF;
+  --primary-text: #0F3D2E;
+  --primary-tint: #E3ECE1;
+
+  /* the one warm accent: sunset amber, used sparingly (main call to action, highlights) */
+  --accent: #E8743B;
+  --accent-hover: #D8642B;
+  --on-accent: #14231B;     /* 5.5:1 on --accent */
+  --accent-text: #A8481A;   /* accent when it is text on light surfaces (5.4:1) */
+  --accent-tint: #FCE9DD;
+
+  /* feedback */
+  --danger: #B3261E;
+  --on-danger: #FFFFFF;
+  --danger-text: #B3261E;
+  --danger-tint: #FBE8E4;
+
+  --focus: #0F3D2E;
+  --scrim: rgba(20, 35, 27, 0.56);
+  --photo: #36574A;         /* placeholder behind photos */
+
+  /* booking status */
+  --status-pending-fg: #8A4B00;     --status-pending-bg: #FFEFD0;
+  --status-confirmed-fg: #0F3D2E;   --status-confirmed-bg: #DCEBDD;
+  --status-finished-fg: #284A73;    --status-finished-bg: #E2EAF4;
+  --status-cancelled-fg: #6B3B38;   --status-cancelled-bg: #F3E4E1;
+
+  /* elevation: soft, warm, low contrast */
+  --shadow-1: 0 1px 2px rgba(60, 45, 20, .06), 0 2px 8px rgba(60, 45, 20, .05);
+  --shadow-2: 0 4px 12px rgba(60, 45, 20, .08), 0 12px 32px rgba(60, 45, 20, .08);
+  --shadow-3: 0 10px 24px rgba(60, 45, 20, .10), 0 24px 56px rgba(60, 45, 20, .12);
+
+  /* hero overlay and glass */
+  --glass: rgba(255, 255, 255, .86);
+}
+
+[data-theme="dark"] {
+  --bg: #0D1913;
+  --bg-deep: #09130E;
+  --surface: #152720;
+  --surface-sunken: #0F1E17;
+  --line: #264036;
+  --line-strong: #6E8A7B;
+
+  --ink: #F3EFE4;
+  --ink-muted: #AEBBB1;
+
+  --primary: #2F7D5B;
+  --primary-hover: #38906A;
+  --on-primary: #FFFFFF;
+  --primary-text: #8FD9B0;
+  --primary-tint: #1B3A2C;
+
+  --accent: #F08A55;
+  --accent-hover: #F59B6C;
+  --on-accent: #14231B;
+  --accent-text: #F6A37A;
+  --accent-tint: #3A2418;
+
+  --danger: #C8362D;
+  --on-danger: #FFFFFF;
+  --danger-text: #F3877F;
+  --danger-tint: #3A1E1B;
+
+  --focus: #F08A55;
+  --scrim: rgba(0, 0, 0, 0.62);
+  --photo: #20382C;
+
+  --status-pending-fg: #FFD58A;     --status-pending-bg: #3D2E0A;
+  --status-confirmed-fg: #9FE0B8;   --status-confirmed-bg: #1B3A2C;
+  --status-finished-fg: #B5CCEC;    --status-finished-bg: #1D2D45;
+  --status-cancelled-fg: #F0B5AF;   --status-cancelled-bg: #3A2220;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .35), 0 2px 8px rgba(0, 0, 0, .25);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, .40), 0 12px 32px rgba(0, 0, 0, .30);
+  --shadow-3: 0 10px 24px rgba(0, 0, 0, .45), 0 24px 56px rgba(0, 0, 0, .35);
+
+  --glass: rgba(21, 39, 32, .86);
+}
+
+:root {
+  /* type: Pretendard Variable covers Korean and Latin */
+  --font-display: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-body: var(--font-display);
+
+  --text-xs: 12px;
+  --text-sm: 13.5px;
+  --text-md: 15.5px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-3xl: clamp(30px, 4vw, 40px);
+  --text-hero: clamp(40px, 6.4vw, 76px);
+
+  /* spacing: 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 80px;
+
+  /* shape */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* layout and interaction */
+  --touch-min: 44px;
+  --container-max: 1200px;
+  --header-h: 68px;
+  --motion-fast: 160ms;
+  --motion-base: 260ms;
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+}

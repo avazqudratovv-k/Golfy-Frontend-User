@@ -275,7 +275,7 @@ export function VenueCard({ venue, heart, index = 0 }: { venue: Venue; heart?: R
           <strong>{ratingText(venue)}</strong>
           <span>· {reviewsText(venue)}</span>
         </div>
-        <div className="g-between" style={{ marginTop: 4 }}>
+        <div className="g-between g-card-foot">
           <span className="g-price">{money(venue.pricePerHour)} <small>/ hour</small></span>
           <Link className="g-btn g-btn--accent g-btn--sm" to={to}>Book</Link>
         </div>

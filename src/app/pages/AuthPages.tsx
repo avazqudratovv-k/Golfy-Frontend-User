@@ -24,19 +24,7 @@ const PHONE_RE = /^\+?[\d\s().-]{7,20}$/;
 const safeNext = (value: string | null) =>
   value && value.startsWith('/') && !value.startsWith('//') ? value : null;
 
-type Origin = { x: number; y: number };
-type Welcome = { title: string; subtitle: string; origin: Origin };
-
-// where the submit button is on screen, so the welcome bloom can grow from it
-const originOf = (ev: FormEvent): Origin => {
-  const btn = (ev.nativeEvent as SubmitEvent).submitter as HTMLElement | null;
-  if (!btn) return { x: 50, y: 60 };
-  const r = btn.getBoundingClientRect();
-  return {
-    x: ((r.left + r.width / 2) / window.innerWidth) * 100,
-    y: ((r.top + r.height / 2) / window.innerHeight) * 100,
-  };
-};
+type Welcome = { title: string; subtitle: string };
 
 function useShake() {
   const [shake, setShake] = useState(false);
@@ -70,14 +58,12 @@ function LoginForm({
     setTried(true);
     setProblem(null);
     if (!email.trim() || !password) return trigger();
-    const origin = originOf(ev);
     setBusy(true);
     try {
       const user = await authApi.login({ email: email.trim(), password });
       onDone({
         title: `Welcome back, ${user.name.split(' ')[0]}`,
         subtitle: "You're logged in. Let's find you a tee time.",
-        origin,
       });
       setUser(user);
     } catch (err) {
@@ -236,7 +222,6 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
     setTried(true);
     setProblem(null);
     if (e.name || e.email || e.phone || e.password) return trigger();
-    const origin = originOf(ev);
     setBusy(true);
     try {
       const account = await authApi.signup({
@@ -248,7 +233,6 @@ function SignupForm({ onDone }: { onDone: (w: Welcome) => void }) {
       onDone({
         title: `Welcome to Golfy, ${account.name.split(' ')[0]}`,
         subtitle: 'Your account is ready. Time to book your first round.',
-        origin,
       });
       setUser(account);
     } catch (err) {
@@ -411,7 +395,6 @@ export default function AuthPage() {
         <AuthSuccess
           title={welcome.title}
           subtitle={welcome.subtitle}
-          origin={welcome.origin}
           onContinue={goOn}
         />
       )}

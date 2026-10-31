@@ -15,6 +15,7 @@ import {
   apiError,
   formatShortDate,
   hourLabel,
+  imgUrl,
   initials,
   isPopular,
   money,
@@ -50,7 +51,58 @@ const WEEKDAYS = [
   'Sunday',
 ];
 
+function Lightbox({
+  images,
+  alt,
+  start,
+  onClose,
+}: {
+  images: string[];
+  alt: string;
+  start: number;
+  onClose: () => void;
+}) {
+  const [i, setI] = useState(start);
+  const step = (d: number) => setI((n) => (n + d + images.length) % images.length);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <div className="g-lightbox" role="dialog" aria-modal="true" aria-label={`${alt} photos`}>
+      <div className="g-lightbox-stage">
+        <img src={imgUrl(images[i])} alt={`${alt}, photo ${i + 1} of ${images.length}`} />
+        <button className="close" type="button" aria-label="Close photos" onClick={onClose} autoFocus>
+          <i className="i i-x" />
+        </button>
+        {images.length > 1 && (
+          <>
+            <button className="prev" type="button" aria-label="Previous photo" onClick={() => step(-1)}>
+              <i className="i i-left" />
+            </button>
+            <button className="next" type="button" aria-label="Next photo" onClick={() => step(1)}>
+              <i className="i i-right" />
+            </button>
+          </>
+        )}
+      </div>
+      <div className="g-lightbox-cap">{i + 1} / {images.length}</div>
+    </div>
+  );
+}
+
 function Gallery({ venue }: { venue: Venue }) {
+  const [open, setOpen] = useState<number | null>(null);
   const images = (venue.venueImages ?? []).slice(0, 5);
   const count = Math.max(images.length, 1);
   // a 4-photo layout leaves one empty cell, so it gets a quiet filler tile
@@ -59,25 +111,32 @@ function Gallery({ venue }: { venue: Venue }) {
     : [undefined];
   if (images.length === 4) tiles.push(undefined);
   return (
-    <div
-      className={`g-gallery${count <= 3 ? ` g-gallery--${count}` : ''}`}
-      aria-label={`Venue photos, ${images.length} images`}
-    >
-      {tiles.map((img, i) => (
-        <div
-          key={i}
-          className={`g-photo${img ? ' has-img' : ' g-photo--empty'}`}
-          role="img"
-          aria-label={
-            img
-              ? `${venue.venueName}, photo ${i + 1} of ${images.length}`
-              : 'Photo coming soon'
-          }
-        >
-          {img && <div className="g-photo-img" style={photoStyle(img)} />}
-        </div>
-      ))}
-    </div>
+    <>
+      <div
+        className={`g-gallery${count <= 3 ? ` g-gallery--${count}` : ''}`}
+        role="group"
+        aria-label={`Venue photos, ${images.length} images`}
+      >
+        {tiles.map((img, i) =>
+          img ? (
+            <button
+              key={i}
+              type="button"
+              className="g-photo has-img"
+              aria-label={`Open photo ${i + 1} of ${images.length} of ${venue.venueName}`}
+              onClick={() => setOpen(i)}
+            >
+              <div className="g-photo-img" style={photoStyle(img)} />
+            </button>
+          ) : (
+            <div key={i} className="g-photo g-photo--empty" role="img" aria-label="Photo coming soon" />
+          ),
+        )}
+      </div>
+      {open !== null && (
+        <Lightbox images={images} alt={venue.venueName} start={open} onClose={() => setOpen(null)} />
+      )}
+    </>
   );
 }
 
@@ -177,6 +236,7 @@ export default function VenuePage() {
     [id],
   );
   const similarQ = useLoader(() => venueApi.similar(id), [id]);
+  const breakdownQ = useLoader(() => venueApi.ratingBreakdown(id), [id]);
 
   const [dateKey, setDateKey] = useState(() => toDateKey(new Date()));
   const availQ = useLoader(
@@ -295,8 +355,9 @@ export default function VenuePage() {
 
   const reviews = reviewsQ.data ?? [];
   const counts = [5, 4, 3, 2, 1].map(
-    (s) => reviews.filter((r) => Math.round(r.rating) === s).length,
+    (s) => breakdownQ.data?.counts[String(s) as '1'] ?? 0,
   );
+  const ratingTotal = breakdownQ.data?.total ?? 0;
   const shownReviews = showAll ? reviews : reviews.slice(0, 3);
 
   if (venueQ.loading) {
@@ -473,7 +534,7 @@ export default function VenuePage() {
                           <div
                             className="g-fill"
                             style={{
-                              width: `${reviews.length ? Math.round((counts[i] / reviews.length) * 100) : 0}%`,
+                              width: `${ratingTotal ? Math.round((counts[i] / ratingTotal) * 100) : 0}%`,
                             }}
                           />
                         </div>

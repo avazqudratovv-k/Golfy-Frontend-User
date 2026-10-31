@@ -3,21 +3,46 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { SUPPORT_EMAIL } from '../lib/config';
 import { useAuth } from '../context/AuthContext';
 import { useIsMobile, useTheme } from '../hooks/useMedia';
-import { Backdrop } from './Motion';
 
-function Header() {
+function Header({ theme }: { theme: string }) {
   const { user } = useAuth();
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+
+  // the mobile menu closes when you navigate
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
   return (
     <header className="g-top">
       <div className="g-wrap g-top-in">
-        <Link className="g-word" to="/">
-          <img src="/icons/golfy-logo-white.png" alt="Golfy" />
+        <Link className="g-word" to="/" aria-label="Golfy, home">
+          <img
+            src={
+              theme === 'dark'
+                ? '/icons/golfy-logo-white.png'
+                : '/icons/golfy-logo.png'
+            }
+            alt="Golfy"
+          />
         </Link>
         <span className="g-sp" />
-        <nav
-          aria-label="Main"
-          style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}
+        <button
+          className="g-iconbtn g-menubtn"
+          type="button"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          aria-controls="main-nav"
+          onClick={() => setOpen(!open)}
         >
+          <i className={`i ${open ? 'i-x' : 'i-menu'}`} />
+        </button>
+        <nav id="main-nav" className="g-nav" aria-label="Main" data-open={open}>
           <NavLink className="g-navl" to="/venues">
             Venues
           </NavLink>
@@ -26,11 +51,7 @@ function Header() {
               <NavLink className="g-navl" to="/login">
                 Log in
               </NavLink>
-              <Link
-                className="g-navl"
-                to="/signup"
-                style={{ border: '1.5px solid #fff' }}
-              >
+              <Link className="g-navl g-navl--cta" to="/signup">
                 Sign up
               </Link>
             </>
@@ -65,32 +86,56 @@ function Footer({
 }) {
   return (
     <footer className="g-foot">
-      <div className="g-wrap g-between">
-        <span>
-          <strong
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 17,
-              color: 'var(--ink)',
-            }}
-          >
-            Golfy
-          </strong>
-          &nbsp;Find a venue, pick a time, play.
-        </span>
-        <span className="g-row" style={{ gap: 8 }}>
+      <div className="g-wrap">
+        <div className="g-foot-grid">
+          <div className="g-foot-brand">
+            <img src="/icons/golfy-logo-white.png" alt="Golfy" />
+            <p>
+              Find a venue, pick a time, play. Courses, simulators and ranges,
+              booked by the hour.
+            </p>
+          </div>
+          <nav aria-label="Explore">
+            <h2>Explore</h2>
+            <ul>
+              <li>
+                <Link to="/venues">All venues</Link>
+              </li>
+              <li>
+                <Link to="/venues?type=Course">Courses</Link>
+              </li>
+              <li>
+                <Link to="/venues?type=Simulator">Simulators</Link>
+              </li>
+              <li>
+                <Link to="/venues?type=Range">Ranges</Link>
+              </li>
+            </ul>
+          </nav>
+          <nav aria-label="Support">
+            <h2>Support</h2>
+            <ul>
+              <li>
+                <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+              </li>
+              <li>
+                <Link to="/bookings">My bookings</Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div className="g-foot-base">
+          <span>Golfy. A portfolio project.</span>
           <button
             className="g-themebtn"
             type="button"
             onClick={onToggleTheme}
             aria-pressed={theme === 'dark'}
           >
+            <i className={`i ${theme === 'dark' ? 'i-sun' : 'i-moon'}`} />
             {theme === 'dark' ? 'Light mode' : 'Dark mode'}
           </button>
-          <span>
-            Support: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
-          </span>
-        </span>
+        </div>
       </div>
     </footer>
   );
@@ -107,7 +152,7 @@ export default function Layout() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  // the sticky header gets a shadow once the page scrolls
+  // the sticky header gets a hairline and shadow once the page scrolls
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -116,13 +161,8 @@ export default function Layout() {
   }, []);
 
   return (
-    <div
-      className={`g-app${isMobile ? ' is-m' : ''}`}
-      data-theme={theme}
-      data-scrolled={scrolled}
-    >
-      <Backdrop />
-      <Header />
+    <div className="g-app" data-theme={theme} data-scrolled={scrolled}>
+      <Header theme={theme} />
       <div
         className="g-pagein"
         key={

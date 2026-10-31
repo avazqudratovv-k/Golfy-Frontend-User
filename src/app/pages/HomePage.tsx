@@ -9,7 +9,7 @@ import {
   VenueCard,
   VenueCardSkeleton,
 } from '../components/ui';
-import { CountUp, HeroScene, Reveal } from '../components/Motion';
+import { CountUp, Reveal } from '../components/Motion';
 import { formatShortDate, initials } from '../lib/format';
 import { SUPPORT_EMAIL } from '../lib/config';
 import { apiError } from '../lib/format';
@@ -20,7 +20,7 @@ function Stats() {
   const { data } = useLoader(() => venueApi.stats(), []);
   const fmt = (n?: number) => (n === undefined ? '–' : <CountUp value={n} />);
   return (
-    <section aria-label="Golfy in numbers">
+    <section className="g-statsband" aria-label="Golfy in numbers">
       <div className="g-wrap">
         <div className="g-stats">
           <Reveal className="g-stat">
@@ -182,25 +182,14 @@ export default function HomePage() {
   return (
     <>
       <section className="g-hero" aria-label="Find a venue">
-        <HeroScene />
         <div className="g-wrap">
+          <span className="g-eyebrow g-rise d1">Hourly golf booking</span>
           <h1 className="g-rise d1">
-            <span className="g-sr">Book your next round, session or practice.</span>
-            <span aria-hidden="true">
-              Book your next{" "}
-              <span className="g-words">
-                <span className="g-words-in">
-                  <span>round</span>
-                  <span>session</span>
-                  <span>practice</span>
-                  <span>game</span>
-                  <span>round</span>
-                </span>
-              </span>
-            </span>
+            Golf, booked by the <em>hour</em>.
           </h1>
-          <p className="g-rise d2">
-            Courses, simulators and practice ranges, booked by the hour.
+          <p className="g-hero-lead g-rise d2">
+            Courses, simulators and practice ranges across Korea. Pick a time
+            that suits you and tee off.
           </p>
           <form
             className="g-searchbar g-rise d3"
@@ -209,75 +198,51 @@ export default function HomePage() {
           >
             <div className="g-field">
               <label className="g-label" htmlFor="hs">
-                Venue name
+                Where do you want to play?
               </label>
               <input
                 className="g-input"
                 id="hs"
                 type="search"
-                placeholder="Try Emerald Ridge"
+                placeholder="Try Gangnam or Jeju"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
               />
             </div>
-            <button
-              className="g-btn g-btn--primary"
-              type="submit"
-              style={{ alignSelf: 'flex-end' }}
-            >
+            <button className="g-btn g-btn--accent g-btn--lg" type="submit">
               <i className="i i-search" />
               Find a venue
             </button>
           </form>
+          <div className="g-hero-chips g-rise d3">
+            <Link className="g-hero-chip" to="/venues?type=Course">
+              <i className="i i-flag" />
+              Courses
+            </Link>
+            <Link className="g-hero-chip" to="/venues?type=Simulator">
+              <i className="i i-grid" />
+              Simulators
+            </Link>
+            <Link className="g-hero-chip" to="/venues?type=Range">
+              <i className="i i-pin" />
+              Ranges
+            </Link>
+          </div>
         </div>
-        <div className="g-hero-chips g-rise d3">
-          <Link className="g-hero-chip" to="/venues?type=Course" style={{ "--d": "0s" } as React.CSSProperties}>
-            <i className="i i-flag" />
-            <span>Courses<small>18 holes and short courses</small></span>
-          </Link>
-          <Link className="g-hero-chip" to="/venues?type=Simulator" style={{ "--d": "-1.8s" } as React.CSSProperties}>
-            <i className="i i-grid" />
-            <span>Simulators<small>Play any weather</small></span>
-          </Link>
-          <Link className="g-hero-chip" to="/venues?type=Range" style={{ "--d": "-3.6s" } as React.CSSProperties}>
-            <i className="i i-pin" />
-            <span>Ranges<small>Practice by the hour</small></span>
-          </Link>
-        </div>
-        <span className="g-scrollcue" aria-hidden="true" />
       </section>
-
-      <div className="g-marquee" aria-hidden="true">
-        <div className="track">
-          {[0, 1].map((n) => (
-            <React.Fragment key={n}>
-              <span>Courses</span>
-              <span>Simulators</span>
-              <span>Practice ranges</span>
-              <span>Tee times</span>
-              <span>Book by the hour</span>
-              <span>Play more golf</span>
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
 
       <section className="g-sec">
         <div className="g-wrap">
           <div className="g-between" style={{ marginBottom: 8 }}>
             <h2 className="g-h2" style={{ margin: 0 }}>
-              Top venues
+              Popular right now
             </h2>
             <Link
               to="/venues"
-              style={{
-                fontWeight: 600,
-                minHeight: 44,
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
+              className="g-btn g-btn--ghost"
+              style={{ gap: 6 }}
             >
-              See all venues
+              See all venues <i className="i i-right arrow" />
             </Link>
           </div>
           {top.error && (
@@ -310,12 +275,43 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="g-sec g-sec--tint" aria-labelledby="how">
+        <div className="g-wrap">
+          <h2 className="g-h2" id="how">
+            Three steps to the tee
+          </h2>
+          <ol className="g-steps">
+            <li className="g-step">
+              <h3>Find a venue</h3>
+              <p>
+                Filter by type, price and rating. Every venue shows what an hour
+                costs.
+              </p>
+            </li>
+            <li className="g-step">
+              <h3>Pick your hours</h3>
+              <p>
+                See free slots live for any day and select one hour or several
+                in a row.
+              </p>
+            </li>
+            <li className="g-step">
+              <h3>Pay and play</h3>
+              <p>
+                Your slot is held for 60 minutes while you check out. Review the
+                venue after you play.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
       <Stats />
 
       <section className="g-sec">
         <div className="g-wrap">
-          <h2 className="g-h2">Recent reviews</h2>
-          <div className="g-cards">
+          <h2 className="g-h2">What players say</h2>
+          <div className="g-cards" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             {reviews.loading &&
               [1, 2, 3].map((k) => (
                 <div className="g-card" key={k}>
@@ -335,7 +331,12 @@ export default function HomePage() {
                 <Reveal key={r._id} delay={i * 110} style={{ display: 'flex' }}>
                   <article className="g-card" style={{ flex: 1 }}>
                     <div className="g-card-body" style={{ gap: 12 }}>
-                      <div className="g-row">
+                      <Stars
+                        value={r.rating}
+                        label={`${r.rating} out of 5 stars`}
+                      />
+                      <p>{r.comment}</p>
+                      <div className="g-row" style={{ marginTop: 4 }}>
                         <span className="g-avatar" aria-hidden="true">
                           {initials(name)}
                         </span>
@@ -347,11 +348,6 @@ export default function HomePage() {
                           </div>
                         </div>
                       </div>
-                      <Stars
-                        value={r.rating}
-                        label={`${r.rating} out of 5 stars`}
-                      />
-                      <p>{r.comment}</p>
                     </div>
                   </article>
                 </Reveal>
@@ -361,7 +357,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section style={{ paddingBottom: 80 }}>
+      <section style={{ paddingBottom: 96 }}>
         <div className="g-wrap">
           <div className="g-two">
             <div style={{ flex: '1 1 300px' }}>

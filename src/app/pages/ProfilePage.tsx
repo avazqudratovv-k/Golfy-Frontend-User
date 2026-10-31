@@ -99,7 +99,6 @@ export default function ProfilePage() {
     <main className="g-mainpage">
       <div className="g-wrap" style={{ maxWidth: 760, display: "grid", gap: 24 }}>
         <PageHeader
-          variant="orbit"
           title="Profile"
           subtitle="Your details and password."
           actions={<button className="g-btn g-btn--secondary" type="button" onClick={doLogout}><i className="i i-logout" />Log out</button>}

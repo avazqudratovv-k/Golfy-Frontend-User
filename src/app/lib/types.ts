@@ -73,3 +73,10 @@ export interface VenueQuery {
   minRating?: number;
   type?: string;
 }
+
+export interface RatingBreakdown {
+  venueId: string;
+  total: number;
+  average: number;
+  counts: Record<"1" | "2" | "3" | "4" | "5", number>;
+}

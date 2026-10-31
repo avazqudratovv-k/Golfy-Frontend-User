@@ -175,7 +175,7 @@ export default function VenuesPage() {
         <div className="g-row" style={{ alignItems: "flex-end" }}>
           <div className="g-field" style={{ flex: "2 1 260px" }}>
             <label className="g-label" htmlFor="q">Search by venue name</label>
-            <input className="g-input" id="q" type="search" placeholder="Try Emerald Ridge" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+            <input className="g-input" id="q" type="search" placeholder="Try Seongsu or Jeju" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
           </div>
           <div className="g-field" style={{ flex: "1 1 180px" }}>
             <label className="g-label" htmlFor="sort">Sort by</label>

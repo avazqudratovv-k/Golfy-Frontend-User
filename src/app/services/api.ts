@@ -1,5 +1,5 @@
 import api from "../lib/axiosInstance";
-import { Availability, Booking, Review, User, Venue, VenueQuery } from "../lib/types";
+import { Availability, Booking, RatingBreakdown, Review, User, Venue, VenueQuery } from "../lib/types";
 import { BookingStatus } from "../lib/enums";
 
 /** AUTH + PROFILE **/
@@ -29,6 +29,7 @@ export const venueApi = {
   similar: async (id: string): Promise<Venue[]> => (await api.get(`/venue/${id}/similar`)).data,
   availability: async (id: string, date: string): Promise<Availability> =>
     (await api.get(`/venue/${id}/availability`, { params: { date } })).data,
+  ratingBreakdown: async (id: string): Promise<RatingBreakdown> => (await api.get(`/venue/${id}/rating-breakdown`)).data,
   stats: async (): Promise<{ totalBookings: number; totalVenues: number; totalUsers: number }> =>
     (await api.get("/stats")).data,
 };

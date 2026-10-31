@@ -63,7 +63,7 @@ export default function BookingsPage() {
   return (
     <main className="g-mainpage">
       <div className="g-wrap" style={{ maxWidth: 860, display: "grid", gap: 24 }}>
-        <PageHeader variant="clock" title="My bookings" subtitle="Upcoming rounds, past games and anything waiting for payment." />
+        <PageHeader title="My bookings" subtitle="Upcoming rounds, past games and anything waiting for payment." />
 
         {!online && (
           <Banner info icon="i-wifi" title="You're offline">You can look at your bookings, but changes will not save until you're back.</Banner>

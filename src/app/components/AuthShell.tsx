@@ -1,56 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FieldError } from './ui';
-import { Confetti, Hills } from './Motion';
+import { Confetti } from './Motion';
 
 const prefersReduced = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/** left panel: a small sunrise scene with a ball that hops into the hole */
-function AuthScene() {
-  return (
-    <div className="g-ax-scene" aria-hidden="true">
-      <span className="g-ax-sun" />
-      <div className="g-ax-layer l1">
-        <div className="g-hills">
-          <Hills fill="#3c8a5e" y={140} amp={80} />
-        </div>
-      </div>
-      <div className="g-ax-layer l2">
-        <div className="g-hills">
-          <Hills fill="#245e3d" y={190} amp={70} />
-        </div>
-      </div>
-      <div className="g-ax-layer l3">
-        <div className="g-hills">
-          <Hills fill="#143d27" y={230} amp={60} />
-        </div>
-      </div>
-      <div className="g-ax-flag">
-        <span className="hole" />
-        <span className="pole" />
-        <span className="cloth" />
-      </div>
-      {[5, 4, 3, 2, 1, 0].map((k) => (
-        <span
-          key={k}
-          className="g-ax-ball"
-          style={{ '--k': k } as React.CSSProperties}
-        >
-          <i
-            style={
-              {
-                '--k': k,
-                '--s': `${20 - k * 2.2}px`,
-                '--o': (k === 0 ? 1 : 0.5 - k * 0.07).toFixed(2),
-              } as React.CSSProperties
-            }
-          />
-        </span>
-      ))}
-    </div>
-  );
-}
 
 const POINTS = [
   { icon: 'i-clock', text: 'Book by the hour, no phone calls' },
@@ -72,9 +26,7 @@ export function AuthShell({
   return (
     <main className="g-authx">
       <aside className="g-authx-art">
-        <AuthScene />
         <div className="g-authx-copy">
-          <img className="logo" src="/icons/golfy-logo-white.png" alt="Golfy" />
           <h2>
             {mode === 'login'
               ? 'Your tee time is one tap away.'
@@ -221,12 +173,10 @@ export function StrengthMeter({ password }: { password: string }) {
 export function AuthSuccess({
   title,
   subtitle,
-  origin,
   onContinue,
 }: {
   title: string;
   subtitle: string;
-  origin: { x: number; y: number };
   onContinue: () => void;
 }) {
   const go = useRef(onContinue);
@@ -244,15 +194,7 @@ export function AuthSuccess({
       className="g-welcome"
       role="status"
       aria-live="polite"
-      style={
-        {
-          '--ox': `${origin.x}%`,
-          '--oy': `${origin.y}%`,
-        } as React.CSSProperties
-      }
     >
-      <div className="g-welcome-bloom" />
-      <span className="g-welcome-ring" />
       <Confetti storageKey={sparkKey} />
       <div className="g-welcome-body">
         <svg className="g-check" viewBox="0 0 52 52" aria-hidden="true">
