@@ -4,7 +4,7 @@
 
 [English](README.md) · [한국어](README.ko.md)
 
-[![CI](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml/badge.svg?branch=portfolio-v2)](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml) ![i18n](https://img.shields.io/badge/UI-한국어%20%7C%20EN-0F3D2E) ![timezone](https://img.shields.io/badge/시간-KST-E8743B)
+[![CI](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml) ![i18n](https://img.shields.io/badge/UI-한국어%20%7C%20EN-0F3D2E) ![timezone](https://img.shields.io/badge/시간-KST-E8743B)
 
 **Golfy**는 골프장, 스크린골프, 골프연습장을 1시간 단위로 예약하는 서비스이고, 이 저장소는 회원용 웹 앱입니다. 시설을 찾고, 빈 시간을 확인하고, 예약하고, 결제(시뮬레이션)하고, 리뷰를 남길 수 있습니다. 포트폴리오 프로젝트이며 시설은 모두 가상의 데모 데이터입니다.
 

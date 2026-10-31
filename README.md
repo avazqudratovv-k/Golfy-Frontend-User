@@ -4,7 +4,7 @@
 
 [English](README.md) · [한국어](README.ko.md)
 
-[![CI](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml/badge.svg?branch=portfolio-v2)](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml) ![i18n](https://img.shields.io/badge/UI-한국어%20%7C%20EN-0F3D2E) ![timezone](https://img.shields.io/badge/times-KST-E8743B)
+[![CI](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml) ![i18n](https://img.shields.io/badge/UI-한국어%20%7C%20EN-0F3D2E) ![timezone](https://img.shields.io/badge/times-KST-E8743B)
 
 The web app for players of **Golfy**, an hourly golf-venue booking platform for Korea. Find a course, simulator or driving range, see the free hours, book, "pay" and review. It is a portfolio project: venues are fictional demo data and payment is simulated.
 
