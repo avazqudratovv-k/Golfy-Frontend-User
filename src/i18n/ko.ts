@@ -6,6 +6,7 @@ export const ko = {
     noData: "결과를 찾지 못했어요.",
     createFailed: "저장하지 못했어요. 다시 시도해 주세요.",
     updateFailed: "변경하지 못했어요. 다시 시도해 주세요.",
+    cannotChangeSelf: "본인 계정은 차단하거나 삭제할 수 없어요.",
     notAdmin: "관리자 권한이 없어요.",
     usedEmailPhone: "이미 사용 중인 이메일 또는 전화번호예요.",
     emailUsed: "이미 사용 중인 이메일이에요.",

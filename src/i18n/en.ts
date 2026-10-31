@@ -6,6 +6,7 @@ export const en = {
     noData: "Nothing was found.",
     createFailed: "We couldn't save that. Please try again.",
     updateFailed: "We couldn't update that. Please try again.",
+    cannotChangeSelf: "You cannot block or delete your own account.",
     notAdmin: "You do not have admin access.",
     usedEmailPhone: "That email or phone number is already in use.",
     emailUsed: "This email is already in use.",

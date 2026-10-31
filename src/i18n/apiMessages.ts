@@ -8,6 +8,7 @@ const EXACT: Record<string, string> = {
   "Create is failed": "createFailed",
   "Update is failed": "updateFailed",
   "You do not have admin access!": "notAdmin",
+  "You cannot block or delete your own account!": "cannotChangeSelf",
   "You are inserting already used email or phone!": "usedEmailPhone",
   "This email is already in use!": "emailUsed",
   "This phone number is already in use!": "phoneUsed",
