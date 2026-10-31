@@ -125,7 +125,7 @@ function Footer({
           </nav>
         </div>
         <div className="g-foot-base">
-          <span>Golfy. A portfolio project.</span>
+          <span>Golfy. A portfolio project with fictional venues. <Link to="/credits">Photo credits</Link></span>
           <button
             className="g-themebtn"
             type="button"

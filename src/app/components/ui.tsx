@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { BookingStatus } from "../lib/enums";
 import { Venue } from "../lib/types";
-import { isPopular, money, photoStyle, ratingText, reviewsText, typeLabel } from "../lib/format";
+import { imgUrl, isPopular, money, ratingText, reviewsText, typeLabel } from "../lib/format";
 import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoritesContext";
 import { useToast } from "../context/ToastContext";
@@ -248,7 +248,7 @@ export function VenueCard({ venue, heart, index = 0 }: { venue: Venue; heart?: R
         role="img"
         aria-label={`Photo of ${venue.venueName}`}
       >
-        <div className="g-photo-img" style={photoStyle(cover)} />
+        {cover && <img className="g-photo-img" src={imgUrl(cover)} alt="" width={1600} height={1067} loading="lazy" decoding="async" />}
         {isPopular(venue) && (
           <span className="g-chip">
             <i className="i i-flame" />Popular

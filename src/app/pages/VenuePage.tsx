@@ -19,7 +19,6 @@ import {
   initials,
   isPopular,
   money,
-  photoStyle,
   ratingText,
   reviewsText,
   toDateKey,
@@ -126,7 +125,7 @@ function Gallery({ venue }: { venue: Venue }) {
               aria-label={`Open photo ${i + 1} of ${images.length} of ${venue.venueName}`}
               onClick={() => setOpen(i)}
             >
-              <div className="g-photo-img" style={photoStyle(img)} />
+              <img className="g-photo-img" src={imgUrl(img)} alt="" width={1600} height={1067} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
             </button>
           ) : (
             <div key={i} className="g-photo g-photo--empty" role="img" aria-label="Photo coming soon" />

@@ -12,6 +12,7 @@ import ReviewPage from "./pages/ReviewPage";
 import ProfilePage from "./pages/ProfilePage";
 import FavouritesPage from "./pages/FavouritesPage";
 import AuthPage from "./pages/AuthPages";
+import CreditsPage from "./pages/CreditsPage";
 import { ErrorBoundary, NotFoundPage } from "./pages/ErrorPages";
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/bookings" element={<RequireAuth><BookingsPage /></RequireAuth>} />
           <Route path="/review/:bookingId" element={<RequireAuth><ReviewPage /></RequireAuth>} />
           <Route path="/favourites" element={<RequireAuth><FavouritesPage /></RequireAuth>} />
+          <Route path="/credits" element={<CreditsPage />} />
           <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
