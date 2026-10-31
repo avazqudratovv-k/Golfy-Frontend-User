@@ -1,3 +1,5 @@
+<p align="center"><img src="public/brand/golfy-logo.svg" alt="Golfy" height="56"></p>
+
 # Golfy player app
 
 Book golf courses, simulator bays and driving ranges by the hour. React 18 + TypeScript + react-router 7, hand-written CSS with a small design-token system.

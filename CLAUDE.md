@@ -22,6 +22,9 @@ All classes use the `g-` prefix. Picture URLs for the hero/auth panel live in `p
 - Space 4px base (`--space-1..8`) · radius `--radius-sm 10 / md 14 / lg 20 / xl 28 / pill` · shadows `--shadow-1..3` · touch target `--touch-min 44px`
 - Rules: WCAG AA contrast, visible focus ring, 44px targets, `prefers-reduced-motion` respected, motion = transform/opacity only.
 
+## Logo
+Single source of truth: `public/brand/` (`golfy-mark[-light].svg`, `golfy-logo[-light].svg`, `favicon.svg`, `favicon-32/48.png`, `apple-touch-icon.png`, `icon-192/512.png`, `og-image.png`). `-light` = for dark backgrounds. Use `BrandLogo` / `BrandMark` from `components/Brand.tsx` (they pick the variant by theme); plain `<img>` only on always-dark surfaces (footer, auth art). Never add another logo copy.
+
 ## Hard rules
 1. Do NOT change architecture or business logic (booking rules, pricing, statuses, auth flow, review rules). Redesign work changes look, layout and UX polish, not behaviour.
 2. Keep every existing route, feature and user flow working.

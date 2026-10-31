@@ -26,6 +26,7 @@ export function AuthShell({
   return (
     <main className="g-authx">
       <aside className="g-authx-art">
+        <img className="g-authx-logo" src="/brand/golfy-logo-light.svg" alt="" aria-hidden="true" width="128" height="48" />
         <div className="g-authx-copy">
           <h2>
             {mode === 'login'

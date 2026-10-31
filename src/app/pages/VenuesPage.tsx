@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { BrandMark } from "../components/Brand";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { venueApi } from "../services/api";
 import { useLoader, useOnline } from "../hooks/useMedia";
@@ -175,7 +176,10 @@ export default function VenuesPage() {
         <div className="g-row" style={{ alignItems: "flex-end" }}>
           <div className="g-field" style={{ flex: "2 1 260px" }}>
             <label className="g-label" htmlFor="q">Search by venue name</label>
-            <input className="g-input" id="q" type="search" placeholder="Try Seongsu or Jeju" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+            <div className="g-iconin g-iconin--search">
+              <BrandMark className="g-iconin-mark" size={22} />
+              <input className="g-input" id="q" type="search" placeholder="Try Seongsu or Jeju" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+            </div>
           </div>
           <div className="g-field" style={{ flex: "1 1 180px" }}>
             <label className="g-label" htmlFor="sort">Sort by</label>

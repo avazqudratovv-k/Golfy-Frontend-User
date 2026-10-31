@@ -1,4 +1,5 @@
 import React, { FormEvent, useState } from 'react';
+import { BrandMark } from "../components/Brand";
 import { Link, useNavigate } from 'react-router-dom';
 import { messageApi, reviewApi, venueApi } from '../services/api';
 import { useLoader } from '../hooks/useMedia';
@@ -200,14 +201,17 @@ export default function HomePage() {
               <label className="g-label" htmlFor="hs">
                 Where do you want to play?
               </label>
-              <input
-                className="g-input"
-                id="hs"
-                type="search"
-                placeholder="Try Gangnam or Jeju"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-              />
+              <div className="g-iconin g-iconin--search">
+                <BrandMark className="g-iconin-mark" size={22} />
+                <input
+                  className="g-input"
+                  id="hs"
+                  type="search"
+                  placeholder="Try Gangnam or Jeju"
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                />
+              </div>
             </div>
             <button className="g-btn g-btn--accent g-btn--lg" type="submit">
               <i className="i i-search" />

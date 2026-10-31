@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { BrandMark } from "../components/Brand";
 import { SUPPORT_EMAIL } from "../lib/config";
 import { useOnline } from "../hooks/useMedia";
 
 export function NotFoundPage() {
   return (
     <main className="g-center">
+      <BrandMark size={56} />
       <span className="g-big" aria-hidden="true">404</span>
       <h1 className="g-h1">This page is out of bounds</h1>
       <p className="g-muted" style={{ maxWidth: "40ch" }}>We can't find the page you were looking for. It may have moved, or the link may be wrong.</p>
@@ -23,7 +25,7 @@ export function ErrorPage({ onRetry }: { onRetry: () => void }) {
     <main className="g-center">
       {online ? (
         <>
-          <i className="i i-lg i-alert" style={{ width: 56, height: 56, color: "var(--danger-text)" }} />
+          <BrandMark size={56} />
           <h1 className="g-h1">Something went wrong</h1>
           <p className="g-muted" style={{ maxWidth: "42ch" }}>It's us, not you. Your bookings are safe. Please try again in a moment.</p>
         </>

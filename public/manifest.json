@@ -1,21 +1,23 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Golfy",
+  "name": "Golfy: book golf venues by the hour",
   "icons": [
     {
-      "src": "icons/favicon.png",
-      "sizes": "64x64",
-      "type": "image/png"
+      "src": "brand/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     },
     {
-      "src": "icons/logo192.png",
+      "src": "brand/icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
-      "sizes": "192x192"
+      "purpose": "any maskable"
     },
     {
-      "src": "icons/logo512.png",
+      "src": "brand/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",

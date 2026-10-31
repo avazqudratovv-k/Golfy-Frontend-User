@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { BrandLogo } from './Brand';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { SUPPORT_EMAIL } from '../lib/config';
 import { useAuth } from '../context/AuthContext';
@@ -22,14 +23,7 @@ function Header({ theme }: { theme: string }) {
     <header className="g-top">
       <div className="g-wrap g-top-in">
         <Link className="g-word" to="/" aria-label="Golfy, home">
-          <img
-            src={
-              theme === 'dark'
-                ? '/icons/golfy-logo-white.png'
-                : '/icons/golfy-logo.png'
-            }
-            alt="Golfy"
-          />
+          <BrandLogo />
         </Link>
         <span className="g-sp" />
         <button
@@ -89,7 +83,7 @@ function Footer({
       <div className="g-wrap">
         <div className="g-foot-grid">
           <div className="g-foot-brand">
-            <img src="/icons/golfy-logo-white.png" alt="Golfy" />
+            <img src="/brand/golfy-logo-light.svg" alt="Golfy" width="102" height="38" />
             <p>
               Find a venue, pick a time, play. Courses, simulators and ranges,
               booked by the hour.
