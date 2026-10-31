@@ -361,7 +361,7 @@ export default function HomePage() {
                 <Trans
                   i18nKey="home.contact.text"
                   values={{ email: SUPPORT_EMAIL }}
-                  components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} /> }}
+                  components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> }}
                 />
               </p>
             </div>

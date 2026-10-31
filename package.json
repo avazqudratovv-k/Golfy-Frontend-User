@@ -21,7 +21,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postbuild": "node scripts/inject-site-url.js"
+    "postbuild": "node scripts/inject-site-url.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
+    "e2e": "playwright test"
   },
   "eslintConfig": {
     "extends": [
@@ -41,5 +44,18 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@playwright/test": "1.49.1",
+    "@testing-library/dom": "9",
+    "@testing-library/jest-dom": "6",
+    "@testing-library/react": "14",
+    "@testing-library/user-event": "14"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^react-router/dom$": "<rootDir>/node_modules/react-router/dist/development/dom-export.js",
+      "^react-router$": "<rootDir>/node_modules/react-router/dist/development/index.js",
+      "^react-router-dom$": "<rootDir>/node_modules/react-router-dom/dist/index.js"
+    }
+  }
 }

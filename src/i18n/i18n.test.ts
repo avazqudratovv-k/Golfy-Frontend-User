@@ -17,13 +17,15 @@ describe("translations", () => {
   });
 
   it("array resources have the same length in both languages", () => {
+    const mismatches: string[] = [];
     const walk = (a: any, b: any, path: string) => {
       Object.keys(a).forEach((key) => {
-        if (Array.isArray(a[key])) expect([path + key, b[key]?.length]).toEqual([path + key, a[key].length]);
-        else if (a[key] && typeof a[key] === "object") walk(a[key], b[key] ?? {}, `${path}${key}.`);
+        if (Array.isArray(a[key]) && b[key]?.length !== a[key].length) mismatches.push(path + key);
+        else if (a[key] && typeof a[key] === "object" && !Array.isArray(a[key])) walk(a[key], b[key] ?? {}, `${path}${key}.`);
       });
     };
     walk(en, ko, "");
+    expect(mismatches).toEqual([]);
   });
 
   it("no value is empty", () => {

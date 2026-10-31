@@ -106,7 +106,7 @@ function LoginForm({
             <Trans
               i18nKey="auth.blocked"
               values={{ email: SUPPORT_EMAIL }}
-              components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: 'inherit' }} /> }}
+              components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: 'inherit' }}>{SUPPORT_EMAIL}</a> }}
             />
           }
         />

@@ -122,7 +122,7 @@ export default function ConfirmationPage() {
           <Link className="g-btn g-btn--ghost" to={`/venues/${booking.venueId}`}>{t("confirm.bookAnother")}</Link>
         </div>
         <p className="g-hint" style={{ textAlign: "center" }}>
-          <Trans i18nKey="confirm.help" values={{ email: SUPPORT_EMAIL }} components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} /> }} />
+          <Trans i18nKey="confirm.help" values={{ email: SUPPORT_EMAIL }} components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> }} />
         </p>
       </div>
     </main>

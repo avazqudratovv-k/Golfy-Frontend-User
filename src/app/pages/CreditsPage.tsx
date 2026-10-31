@@ -8,7 +8,7 @@ export default function CreditsPage() {
     <main className="g-wrap" style={{ paddingBlock: "var(--space-7)" }}>
       <h1 className="g-h1">{t("credits.title")}</h1>
       <p className="g-muted" style={{ maxWidth: "62ch" }}>
-        <Trans i18nKey="credits.intro" components={{ wiki: <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener noreferrer" /> }} />
+        <Trans i18nKey="credits.intro" components={{ wiki: <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> }} />
       </p>
       <ul className="g-credits" style={{ listStyle: "none", padding: 0, margin: "var(--space-6) 0 0", display: "grid", gap: "var(--space-3)" }}>
         {PHOTO_CREDITS.map((c) => (

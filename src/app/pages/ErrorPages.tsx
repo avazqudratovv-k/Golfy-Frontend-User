@@ -43,7 +43,7 @@ export function ErrorPage({ onRetry }: { onRetry: () => void }) {
         <button className="g-btn g-btn--primary" type="button" onClick={onRetry}>{t("errors.tryAgain")}</button>
         <a className="g-btn g-btn--secondary" href="/">{t("errors.backHome")}</a>
       </div>
-      <p className="g-hint"><Trans i18nKey="errors.stuck" values={{ email: SUPPORT_EMAIL }} components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`} /> }} /></p>
+      <p className="g-hint"><Trans i18nKey="errors.stuck" values={{ email: SUPPORT_EMAIL }} components={{ mail: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> }} /></p>
     </main>
   );
 }
