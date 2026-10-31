@@ -81,7 +81,7 @@ function Lightbox({
   return (
     <div className="g-lightbox" role="dialog" aria-modal="true" aria-label={`${alt} photos`}>
       <div className="g-lightbox-stage">
-        <img src={imgUrl(images[i])} alt={`${alt}, photo ${i + 1} of ${images.length}`} />
+        <img src={imgUrl(images[i])} alt={`${alt}, ${i + 1} of ${images.length}`} />
         <button className="close" type="button" aria-label="Close photos" onClick={onClose} autoFocus>
           <i className="i i-x" />
         </button>

@@ -26,7 +26,6 @@
 .g-iconbtn:hover { background: var(--surface-sunken); }
 .g-textbtn { min-height: var(--touch-min); padding: 0 var(--space-2); border: 0; background: transparent; color: var(--primary-text); font: 650 var(--text-sm) var(--font-body); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border-radius: var(--radius-sm); }
 .g-textbtn:hover { background: var(--primary-tint); }
-.g-link { color: var(--primary-text); font-weight: 650; text-decoration: underline; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
 a.g-btn { text-decoration: none; }
 
 /* ---------- Forms ---------- */

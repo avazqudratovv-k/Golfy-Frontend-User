@@ -3,6 +3,7 @@
 .g-app { position: relative; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); color: var(--ink); }
 .g-pagein { flex: 1 0 auto; display: flex; flex-direction: column; }
 .g-pagein > main { flex: 1 0 auto; }
+.g-auth { max-width: 472px; margin: 0 auto; padding: var(--space-7) var(--space-4) var(--space-8); display: grid; gap: var(--space-4); }
 .g-mainpage { padding: var(--space-6) 0 var(--space-8); }
 .g-sec { padding: var(--space-8) 0; }
 .g-sec--tint { background: var(--bg-deep); }
@@ -150,7 +151,6 @@
 .g-gallery--2 .g-photo:first-child { grid-row: auto; }
 .g-gallery--3 { grid-template-columns: 2fr 1fr; }
 .g-gallery .g-photo--empty { cursor: default; }
-.g-gallery-more { position: absolute; right: 12px; bottom: 12px; z-index: 1; }
 @media (max-width: 720px) {
   .g-gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: var(--radius-lg); }
   .g-gallery .g-photo { flex: 0 0 88%; height: 240px; scroll-snap-align: start; }
