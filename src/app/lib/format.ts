@@ -1,5 +1,6 @@
 import { serverApi } from "./config";
 import { VenueType } from "./enums";
+import { KST_TIME_ZONE, kstSlotEnded } from "./kst";
 import { Venue } from "./types";
 
 export const money = (n: number) => `$${Number(n).toFixed(2)}`;
@@ -28,7 +29,7 @@ export const initials = (name = "") =>
 export const typeLabel = (t?: VenueType) =>
   t === "SIMULATOR" ? "Simulator" : t === "RANGE" ? "Range" : "Course";
 
-// the booking day is stored as a UTC date, so it is always shown in UTC
+// the booking day is a KST calendar day (stored as 00:00 KST), so days are always shown in KST
 export const formatDay = (iso: string) =>
   new Date(iso)
     .toLocaleDateString("en-GB", {
@@ -36,14 +37,12 @@ export const formatDay = (iso: string) =>
       day: "numeric",
       month: "short",
       year: "numeric",
-      timeZone: "UTC",
+      timeZone: KST_TIME_ZONE,
     })
     .replace(",", "");
 
 export const formatShortDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-
-export const toDateKey = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: KST_TIME_ZONE });
 
 export const bookingRef = (id: string) => `GLF-${id.slice(-6).toUpperCase()}`;
 
@@ -69,12 +68,8 @@ export const reviewsText = (v: Venue) => {
   return count === 0 ? "No reviews yet" : count === 1 ? "1 review" : `${count} reviews`;
 };
 
-// has the booked slot already ended? (bookingDate is a UTC midnight)
-export const slotEnded = (bookingDate: string, endTime: string) => {
-  const [h, m] = endTime.split(":").map(Number);
-  const minutes = h * 60 + m === 0 ? 1440 : h * 60 + m;
-  return Date.now() >= new Date(bookingDate).getTime() + minutes * 60000;
-};
+// has the booked slot already ended? (end time is KST wall-clock on the booking's KST day)
+export const slotEnded = (bookingDate: string, endTime: string) => kstSlotEnded(bookingDate, endTime);
 
 export const apiError = (err: any): { status?: number; message: string } => ({
   status: err?.response?.status,

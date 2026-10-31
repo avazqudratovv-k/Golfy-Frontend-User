@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { dateKeyOf, daysInMonth, kstDateKey, kstHourNow, kstParts, shiftMonth, weekdayOf } from "../lib/kst";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { bookingApi, reviewApi, venueApi } from '../services/api';
 import { useLoader } from '../hooks/useMedia';
@@ -21,7 +22,6 @@ import {
   money,
   ratingText,
   reviewsText,
-  toDateKey,
   typeLabel,
 } from '../lib/format';
 import { Venue } from '../lib/types';
@@ -146,20 +146,19 @@ function Calendar({
   selected: string;
   onSelect: (key: string) => void;
 }) {
-  const today = new Date();
-  const todayKey = toDateKey(today);
+  // "today" is the KST day, whatever the browser's time zone is
+  const today = kstParts();
+  const todayKey = kstDateKey();
   const [view, setView] = useState(() => {
     const [y, m] = selected.split('-').map(Number);
-    return { y, m: m - 1 };
+    return { y, m: m - 1 }; // m is 0-11 here
   });
-  const first = new Date(view.y, view.m, 1);
-  const lead = (first.getDay() + 6) % 7; // week starts on Monday
-  const daysInMonth = new Date(view.y, view.m + 1, 0).getDate();
-  const isCurrentMonth =
-    view.y === today.getFullYear() && view.m === today.getMonth();
+  const lead = (weekdayOf(view.y, view.m + 1, 1) + 6) % 7; // week starts on Monday
+  const monthDays = daysInMonth(view.y, view.m + 1);
+  const isCurrentMonth = view.y === today.y && view.m === today.m - 1;
   const shift = (delta: number) => {
-    const d = new Date(view.y, view.m + delta, 1);
-    setView({ y: d.getFullYear(), m: d.getMonth() });
+    const next = shiftMonth(view.y, view.m + 1, delta);
+    setView({ y: next.y, m: next.m - 1 });
   };
 
   return (
@@ -201,16 +200,16 @@ function Calendar({
         {Array.from({ length: lead }, (_, i) => (
           <span key={`b${i}`} />
         ))}
-        {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
-          const d = new Date(view.y, view.m, day);
-          const key = toDateKey(d);
+        {Array.from({ length: monthDays }, (_, i) => i + 1).map((day) => {
+          const key = dateKeyOf(view.y, view.m + 1, day);
+          const weekday = (weekdayOf(view.y, view.m + 1, day) + 6) % 7;
           const past = key < todayKey;
           return (
             <button
               key={key}
               type="button"
               className={`g-day${key === todayKey ? ' is-today' : ''}`}
-              aria-label={`${WEEKDAYS[(d.getDay() + 6) % 7]} ${day} ${MONTHS[view.m]} ${view.y}${key === todayKey ? ', today' : ''}`}
+              aria-label={`${WEEKDAYS[weekday]} ${day} ${MONTHS[view.m]} ${view.y}${key === todayKey ? ', today' : ''}`}
               aria-pressed={key === selected}
               disabled={past}
               onClick={() => onSelect(key)}
@@ -237,7 +236,7 @@ export default function VenuePage() {
   const similarQ = useLoader(() => venueApi.similar(id), [id]);
   const breakdownQ = useLoader(() => venueApi.ratingBreakdown(id), [id]);
 
-  const [dateKey, setDateKey] = useState(() => toDateKey(new Date()));
+  const [dateKey, setDateKey] = useState(() => kstDateKey());
   const availQ = useLoader(
     () => venueApi.availability(id, dateKey),
     [id, dateKey],
@@ -262,8 +261,8 @@ export default function VenuePage() {
   const venue = venueQ.data;
   const avail = availQ.data;
 
-  const nowHour = new Date().getHours();
-  const isToday = dateKey === toDateKey(new Date());
+  const nowHour = kstHourNow(); // slot hours are KST wall-clock
+  const isToday = dateKey === kstDateKey();
   // taken by someone else, or already in the past today
   const unavailable = (h: number) =>
     (avail ? !avail.slots[h]?.available : true) || (isToday && h <= nowHour);
@@ -309,8 +308,7 @@ export default function VenuePage() {
   const hours = sel ? sel.b - sel.a + 1 : 0;
   const slotsTitle = useMemo(() => {
     const [y, m, d] = dateKey.split('-').map(Number);
-    const date = new Date(y, m - 1, d);
-    return `Availability, ${WEEKDAYS[(date.getDay() + 6) % 7].slice(0, 3)} ${d} ${MONTHS[m - 1]}`;
+    return `Availability, ${WEEKDAYS[(weekdayOf(y, m, d) + 6) % 7].slice(0, 3)} ${d} ${MONTHS[m - 1]}`;
   }, [dateKey]);
 
   const book = async () => {

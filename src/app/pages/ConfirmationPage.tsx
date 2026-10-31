@@ -1,4 +1,5 @@
 import React from "react";
+import { kstWallClockToUtcStamp } from "../lib/kst";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { bookingApi } from "../services/api";
 import { useLoader } from "../hooks/useMedia";
@@ -11,16 +12,10 @@ import { EmptyState, StatusBadge } from "../components/ui";
 import { Confetti } from "../components/Motion";
 import { Booking } from "../lib/types";
 
-// builds a calendar file (times are the venue's local time, so they are "floating")
+// builds a calendar file; start/end are KST wall-clock times, written as UTC instants so every calendar app agrees
 function calendarFile(b: Booking) {
   const venue = b.venueData?.[0];
-  const d = new Date(b.bookingDate);
-  const stamp = (time: string) => {
-    const [h, m] = time.split(":").map(Number);
-    const base = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0));
-    base.setUTCMinutes(h * 60 + m);
-    return `${base.getUTCFullYear()}${pad2(base.getUTCMonth() + 1)}${pad2(base.getUTCDate())}T${pad2(base.getUTCHours())}${pad2(base.getUTCMinutes())}00`;
-  };
+  const stamp = (time: string) => kstWallClockToUtcStamp(b.bookingDate, time);
   const now = new Date();
   const created = `${now.getUTCFullYear()}${pad2(now.getUTCMonth() + 1)}${pad2(now.getUTCDate())}T${pad2(now.getUTCHours())}${pad2(now.getUTCMinutes())}00Z`;
   return [
