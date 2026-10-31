@@ -30,16 +30,19 @@
       @media (prefers-color-scheme: dark) { .g-splash { background: #0D1913; } .g-splash img { content: url(%PUBLIC_URL%/brand/golfy-mark-light.svg); } }
       @media (prefers-reduced-motion: reduce) { .g-splash img { animation: none; } }
       /* picture URLs live here because the CSS bundler would try to resolve them */
-      :root { --img-hero: url(/img/hero.jpg?v=3); --img-auth: url(/img/auth.jpg?v=4); }
+      :root { --img-hero: url(/img/hero.webp?v=5); --img-auth: url(/img/auth.webp?v=5); }
     </style>
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Golfy" />
     <meta property="og:title" content="Golfy: book golf venues by the hour" />
     <meta property="og:description" content="Courses, simulators and driving ranges across Korea, booked by the hour. A portfolio project with fictional venues." />
-    <meta property="og:image" content="%PUBLIC_URL%/brand/og-image.png" />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <link rel="canonical" href="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/brand/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="__SITE_URL__/brand/og-image.png" />
     <title>Golfy</title>
   </head>
   <body>
