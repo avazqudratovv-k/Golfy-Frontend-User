@@ -355,3 +355,49 @@ html[lang="ko"] body { word-break: keep-all; overflow-wrap: break-word; }
 [data-theme="dark"] .g-app[data-page="venues"]::after, [data-theme="dark"] .g-app[data-page="home"]::after, [data-theme="dark"] .g-app[data-page="account"]::after { background: var(--ink); }
 [data-theme="dark"] .g-app[data-page="home"]::after { opacity: .07; }
 [data-theme="dark"] .g-app[data-page="account"]::after { opacity: .04; }
+
+/* ===== v3 home rows ===== */
+/* horizontal scroll-snap rail; on the home page the first card is the featured one */
+.g-rail { display: flex; gap: var(--space-4); overflow-x: auto; scroll-snap-type: x proximity; padding: var(--space-2) 2px var(--space-4); margin-inline: -2px; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; -webkit-overflow-scrolling: touch; }
+.g-rail > * { flex: 0 0 min(300px, 78%); scroll-snap-align: start; }
+.g-rail:not(.g-rail--even) > :first-child { flex-basis: min(560px, 88%); }
+.g-rail:not(.g-rail--even) > :first-child .g-photo, .g-rail:not(.g-rail--even) > :first-child img { min-height: 260px; }
+.g-rail:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* steps: connected path */
+.g-sec--tint { background: transparent; }
+.g-steps { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); padding-bottom: 96px; counter-reset: step; }
+.g-step { padding: 0; border: 0; background: none; box-shadow: none; }
+.g-step:nth-child(2) { margin-top: 48px; }
+.g-step:nth-child(3) { margin-top: 96px; }
+.g-step::before { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 30px; box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 28%, transparent); margin-bottom: var(--space-3); }
+.g-step:not(:last-child)::after { content: ""; position: absolute; left: 96px; top: 34px; width: calc(100% + var(--space-6) - 112px); border-top: 3px dotted var(--primary); opacity: .45; transform-origin: 0 0; transform: rotate(8deg); }
+.g-step h3 { font-size: var(--text-xl); }
+@media (max-width: 720px) {
+  .g-steps { grid-template-columns: 1fr; gap: var(--space-5); padding-bottom: 0; }
+  .g-step:nth-child(n) { margin-top: 0; padding-left: 88px; min-height: 72px; }
+  .g-step::before { position: absolute; left: 0; top: 0; width: 56px; height: 56px; font-size: 22px; }
+  .g-step:not(:last-child)::after { left: 27px; top: 64px; width: 0; height: calc(100% - 40px); border-top: 0; border-left: 3px dotted var(--primary); transform: none; }
+}
+
+/* stats: inline numbers with hairline dividers */
+.g-statsband, [data-theme="dark"] .g-statsband { background: transparent; color: var(--ink); padding: var(--space-6) 0; }
+.g-stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 0; }
+.g-stat { flex: 1 1 200px; text-align: center; padding: var(--space-3) var(--space-5); }
+.g-stat + .g-stat { border-left: 1px solid var(--line-strong); }
+.g-stat b { font-size: clamp(44px, 7vw, 84px); color: var(--primary-text); }
+.g-stat span { color: var(--ink-muted); opacity: 1; }
+@media (max-width: 720px) { .g-stat + .g-stat { border-left: 0; border-top: 1px solid var(--line); } .g-stat { flex-basis: 100%; } }
+
+/* reviews: one featured quote, compact lines beside it */
+.g-quotes { grid-template-columns: 1.4fr 1fr; grid-auto-rows: auto; align-items: stretch; gap: var(--space-4) var(--space-6); }
+.g-quotes > :first-child { grid-row: span 2; }
+.g-quotes > :first-child .g-card { position: relative; background: var(--primary); color: var(--on-primary); border-color: transparent; padding: var(--space-4); }
+.g-quotes > :first-child .g-card::before { content: "\201C"; position: absolute; top: -6px; right: 24px; font: 800 140px/1 Georgia, serif; color: var(--accent); opacity: .9; pointer-events: none; }
+[data-theme="dark"] .g-quotes > :first-child .g-card { color: var(--on-primary); }
+.g-quotes > :first-child .g-card p { font-size: var(--text-xl); line-height: 1.5; font-weight: 600; }
+.g-quotes > :first-child .g-meta { color: inherit; opacity: .8; }
+.g-quotes > :first-child .g-avatar { background: var(--accent); color: var(--on-accent); }
+.g-quotes > :not(:first-child) .g-card { border: 0; border-left: 3px solid var(--accent); border-radius: 0; background: transparent; box-shadow: none; }
+.g-quotes > :not(:first-child) .g-card-body { padding: var(--space-2) var(--space-4); }
+@media (max-width: 860px) { .g-quotes { grid-template-columns: 1fr; } .g-quotes > :first-child { grid-row: auto; } }

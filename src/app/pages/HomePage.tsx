@@ -269,7 +269,7 @@ export default function HomePage() {
             </Banner>
           )}
           <div
-            className="g-cards"
+            className="g-cards g-rail"
             style={{ marginTop: 16 }}
             aria-busy={top.loading}
           >
@@ -309,7 +309,7 @@ export default function HomePage() {
       <section className="g-sec">
         <div className="g-wrap">
           <h2 className="g-h2">{t('home.reviewsTitle')}</h2>
-          <div className="g-cards" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
+          <div className="g-cards g-quotes">
             {reviews.loading &&
               [1, 2, 3].map((k) => (
                 <div className="g-card" key={k}>

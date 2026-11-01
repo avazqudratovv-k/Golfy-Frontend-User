@@ -707,7 +707,7 @@ export default function VenuePage() {
         {(similarQ.data?.length ?? 0) > 0 && (
           <section aria-label={t('venue.similar')} style={{ marginTop: 24 }}>
             <h2 className="g-h2">{t('venue.similar')}</h2>
-            <div className="g-cards">
+            <div className="g-cards g-rail g-rail--even">
               {similarQ.data!.map((v, i) => (
                 <VenueCard key={v._id} venue={v} index={i} />
               ))}
