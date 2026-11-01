@@ -6,8 +6,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/brand/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="48x48" href="%PUBLIC_URL%/brand/favicon-48.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#F6F2E9" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0D1913" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F4F6FB" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0B1029" media="(prefers-color-scheme: dark)" />
     <meta
       name="description"
       content="Golfy - find a golf venue, pick a time and book it by the hour."
@@ -24,10 +24,10 @@
     />
     <style>
       /* shown until React mounts and replaces #root's content */
-      .g-splash { min-height: 100vh; display: grid; place-items: center; background: #F6F2E9; }
+      .g-splash { min-height: 100vh; display: grid; place-items: center; background: #F4F6FB; }
       .g-splash img { animation: g-splash 1.2s ease-in-out infinite; }
       @keyframes g-splash { 50% { opacity: .45; transform: scale(.94); } }
-      @media (prefers-color-scheme: dark) { .g-splash { background: #0D1913; } .g-splash img { content: url(%PUBLIC_URL%/brand/golfy-mark-light.svg); } }
+      @media (prefers-color-scheme: dark) { .g-splash { background: #0B1029; } .g-splash img { content: url(%PUBLIC_URL%/brand/golfy-mark-light.svg); } }
       @media (prefers-reduced-motion: reduce) { .g-splash img { animation: none; } }
       /* picture URLs live here because the CSS bundler would try to resolve them */
       :root { --img-hero: url(/img/hero.webp?v=5); --img-auth: url(/img/auth.webp?v=5); }

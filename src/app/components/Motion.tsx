@@ -132,7 +132,7 @@ export function CountUp({
   return <span ref={ref}>{n.toLocaleString('ko-KR')}</span>;
 }
 
-const CONFETTI_COLORS = ['#E8743B', '#F6C9A8', '#0F3D2E', '#8FD9B0', '#ffffff'];
+const CONFETTI_COLORS = ['#C7F23A', '#E4F9A0', '#2B2FA8', '#8E96FF', '#ffffff'];
 
 /** a short burst of confetti, once per booking per browser session */
 export function Confetti({ storageKey }: { storageKey: string }) {

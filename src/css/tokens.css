@@ -1,33 +1,34 @@
-/* Golfy design tokens: "clubhouse at golden hour".
-   This file is identical in golfy-frontend and golfy-admin. Change it in both. */
+/* Golfy design tokens: indigo + lime.
+   Player app only: the admin app keeps its own copy. */
 
+/* indigo + lime; light theme */
 :root,
 [data-theme="light"] {
   /* surfaces */
-  --bg: #F6F2E9;            /* warm off-white page */
-  --bg-deep: #EDE6D6;       /* bands, footers on light */
+  --bg: #F4F6FB;            /* cool off-white page */
+  --bg-deep: #E8ECF7;       /* bands, footers on light */
   --surface: #FFFFFF;
-  --surface-sunken: #EFE9DB;
-  --line: #E4DCC9;
-  --line-strong: #858A7E;   /* >= 3:1 on surface, for input borders and controls */
+  --surface-sunken: #ECEFF8;
+  --line: #DADFEE;
+  --line-strong: #7C85A8;   /* >= 3:1 on surface, for input borders and controls */
 
   /* text */
-  --ink: #14231B;
-  --ink-muted: #55625A;     /* 5.6:1 on --bg */
+  --ink: #0F1535;
+  --ink-muted: #515A7C;     /* 6.3:1 on --bg */
 
-  /* brand: fairway green */
-  --primary: #0F3D2E;
-  --primary-hover: #0A2D22;
-  --on-primary: #FFFFFF;
-  --primary-text: #0F3D2E;
-  --primary-tint: #E3ECE1;
+  /* brand: deep indigo */
+  --primary: #2B2FA8;
+  --primary-hover: #21258A;
+  --on-primary: #FFFFFF;    /* 10:1 on --primary */
+  --primary-text: #2B2FA8;
+  --primary-tint: #E3E6FA;
 
-  /* the one warm accent: sunset amber, used sparingly (main call to action, highlights) */
-  --accent: #E8743B;
-  --accent-hover: #D8642B;
-  --on-accent: #14231B;     /* 5.5:1 on --accent */
-  --accent-text: #A8481A;   /* accent when it is text on light surfaces (5.4:1) */
-  --accent-tint: #FCE9DD;
+  /* accent: lime, used as a fill with dark ink on it, never as text on light */
+  --accent: #C7F23A;
+  --accent-hover: #B6E21F;
+  --on-accent: #0F1535;     /* 13.7:1 on --accent */
+  --accent-text: #4F6A00;   /* accent when it is text on light surfaces (6.2:1) */
+  --accent-tint: #EEFBC4;
 
   /* feedback */
   --danger: #B3261E;
@@ -35,67 +36,67 @@
   --danger-text: #B3261E;
   --danger-tint: #FBE8E4;
 
-  --focus: #0F3D2E;
-  --scrim: rgba(20, 35, 27, 0.56);
-  --photo: #36574A;         /* placeholder behind photos */
+  --focus: #2B2FA8;
+  --scrim: rgba(15, 21, 53, 0.56);
+  --photo: #3A4378;         /* placeholder behind photos */
 
   /* booking status */
   --status-pending-fg: #8A4B00;     --status-pending-bg: #FFEFD0;
-  --status-confirmed-fg: #0F3D2E;   --status-confirmed-bg: #DCEBDD;
+  --status-confirmed-fg: #2B2FA8;   --status-confirmed-bg: #E0E4FA;
   --status-finished-fg: #284A73;    --status-finished-bg: #E2EAF4;
   --status-cancelled-fg: #6B3B38;   --status-cancelled-bg: #F3E4E1;
 
-  /* elevation: soft, warm, low contrast */
-  --shadow-1: 0 1px 2px rgba(60, 45, 20, .06), 0 2px 8px rgba(60, 45, 20, .05);
-  --shadow-2: 0 4px 12px rgba(60, 45, 20, .08), 0 12px 32px rgba(60, 45, 20, .08);
-  --shadow-3: 0 10px 24px rgba(60, 45, 20, .10), 0 24px 56px rgba(60, 45, 20, .12);
+  /* elevation: soft, cool indigo tint */
+  --shadow-1: 0 1px 2px rgba(25, 30, 90, .06), 0 2px 8px rgba(25, 30, 90, .05);
+  --shadow-2: 0 4px 12px rgba(25, 30, 90, .08), 0 12px 32px rgba(25, 30, 90, .08);
+  --shadow-3: 0 10px 24px rgba(25, 30, 90, .10), 0 24px 56px rgba(25, 30, 90, .14);
 
-  /* hero overlay and glass */
-  --glass: rgba(255, 255, 255, .86);
+  /* glass */
+  --glass: rgba(255, 255, 255, .78);
 }
 
 [data-theme="dark"] {
-  --bg: #0D1913;
-  --bg-deep: #09130E;
-  --surface: #152720;
-  --surface-sunken: #0F1E17;
-  --line: #264036;
-  --line-strong: #6E8A7B;
+  --bg: #0B1029;
+  --bg-deep: #070B1E;
+  --surface: #141B3D;
+  --surface-sunken: #0F1533;
+  --line: #28315E;
+  --line-strong: #7782B5;
 
-  --ink: #F3EFE4;
-  --ink-muted: #AEBBB1;
+  --ink: #EEF0FF;
+  --ink-muted: #A9B1D6;
 
-  --primary: #2F7D5B;
-  --primary-hover: #38906A;
-  --on-primary: #FFFFFF;
-  --primary-text: #8FD9B0;
-  --primary-tint: #1B3A2C;
+  --primary: #8E96FF;
+  --primary-hover: #A3AAFF;
+  --on-primary: #0B1029;    /* 7.1:1 on --primary */
+  --primary-text: #A3AAFF;
+  --primary-tint: #1E2757;
 
-  --accent: #F08A55;
-  --accent-hover: #F59B6C;
-  --on-accent: #14231B;
-  --accent-text: #F6A37A;
-  --accent-tint: #3A2418;
+  --accent: #C7F23A;
+  --accent-hover: #D6FA5C;
+  --on-accent: #0F1535;
+  --accent-text: #C7F23A;   /* 14:1 on --bg */
+  --accent-tint: #26310F;
 
   --danger: #C8362D;
   --on-danger: #FFFFFF;
   --danger-text: #F3877F;
   --danger-tint: #3A1E1B;
 
-  --focus: #F08A55;
-  --scrim: rgba(0, 0, 0, 0.62);
-  --photo: #20382C;
+  --focus: #C7F23A;
+  --scrim: rgba(3, 5, 18, 0.66);
+  --photo: #1E2757;
 
   --status-pending-fg: #FFD58A;     --status-pending-bg: #3D2E0A;
-  --status-confirmed-fg: #9FE0B8;   --status-confirmed-bg: #1B3A2C;
+  --status-confirmed-fg: #B7BCFF;   --status-confirmed-bg: #1E2757;
   --status-finished-fg: #B5CCEC;    --status-finished-bg: #1D2D45;
   --status-cancelled-fg: #F0B5AF;   --status-cancelled-bg: #3A2220;
 
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, .35), 0 2px 8px rgba(0, 0, 0, .25);
-  --shadow-2: 0 4px 12px rgba(0, 0, 0, .40), 0 12px 32px rgba(0, 0, 0, .30);
-  --shadow-3: 0 10px 24px rgba(0, 0, 0, .45), 0 24px 56px rgba(0, 0, 0, .35);
+  --shadow-1: 0 1px 2px rgba(2, 4, 20, .40), 0 2px 8px rgba(2, 4, 20, .28);
+  --shadow-2: 0 4px 12px rgba(2, 4, 20, .45), 0 12px 32px rgba(2, 4, 20, .34);
+  --shadow-3: 0 10px 24px rgba(2, 4, 20, .50), 0 24px 56px rgba(2, 4, 20, .40);
 
-  --glass: rgba(21, 39, 32, .86);
+  --glass: rgba(20, 27, 61, .78);
 }
 
 :root {
