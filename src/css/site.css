@@ -51,7 +51,7 @@
 /* ---------- Home hero: photo-led, inset card ---------- */
 .g-hero { position: relative; isolation: isolate; overflow: hidden; width: calc(100% - 32px); max-width: 1368px; margin: var(--space-4) auto 0; border-radius: var(--radius-xl); color: #fff;
   min-height: min(76vh, 700px); display: flex; align-items: flex-end; padding: 96px 0 var(--space-7);
-  background: linear-gradient(90deg, rgba(7, 30, 22, .88) 0%, rgba(7, 30, 22, .62) 46%, rgba(7, 30, 22, .12) 100%), linear-gradient(0deg, rgba(7, 30, 22, .5), transparent 55%), var(--photo) var(--img-hero) center / cover no-repeat; }
+  background: linear-gradient(90deg, rgba(8, 11, 36, .88) 0%, rgba(8, 11, 36, .62) 46%, rgba(8, 11, 36, .12) 100%), linear-gradient(0deg, rgba(8, 11, 36, .5), transparent 55%), var(--photo) var(--img-hero) center / cover no-repeat; }
 .g-hero .g-wrap { width: 100%; }
 .g-hero h1 { font-size: var(--text-hero); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; max-width: 13ch; text-shadow: 0 2px 24px rgba(0, 0, 0, .25); }
 .g-hero h1 em { font-style: normal; color: #FFB27F; }
@@ -95,12 +95,12 @@ img.g-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; 
 .g-photo-img { position: absolute; inset: 0; background: var(--photo) center / cover no-repeat; transition: transform .7s var(--ease-out); }
 .g-card--hover:hover .g-photo-img { transform: scale(1.05); }
 .g-photo .g-chip { position: absolute; top: 12px; left: 12px; z-index: 1; }
-.g-photo-cap { position: relative; width: 100%; padding: var(--space-6) var(--space-4) var(--space-4); background: linear-gradient(transparent, rgba(7, 30, 22, .82)); }
+.g-photo-cap { position: relative; width: 100%; padding: var(--space-6) var(--space-4) var(--space-4); background: linear-gradient(transparent, rgba(8, 11, 36, .82)); }
 .g-photo-cap h3 { color: #fff; }
 .g-photo--empty { background: var(--primary-tint); }
 .g-heart { position: absolute; top: 8px; right: 8px; z-index: 2; width: var(--touch-min); height: var(--touch-min); display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #fff; cursor: pointer; text-decoration: none; transition: transform 120ms ease; }
-.g-heart::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: rgba(15, 30, 22, .42); backdrop-filter: blur(6px); transition: background-color var(--motion-fast); }
-.g-heart:hover::before { background: rgba(15, 30, 22, .62); }
+.g-heart::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: rgba(11, 16, 41, .42); backdrop-filter: blur(6px); transition: background-color var(--motion-fast); }
+.g-heart:hover::before { background: rgba(11, 16, 41, .62); }
 .g-heart .i { position: relative; width: 20px; height: 20px; }
 .g-heart.on { color: #FF8F8F; }
 .g-heart.on .i { animation: g-pop 220ms ease-out; }
@@ -159,7 +159,7 @@ img.g-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; 
   .g-side { position: static; flex-basis: 100%; }
   .g-panel { padding: var(--space-4); }
 }
-.g-lightbox { position: fixed; inset: 0; z-index: 70; display: grid; grid-template-rows: 1fr auto; background: rgba(8, 20, 14, .94); animation: g-fade var(--motion-base) ease both; }
+.g-lightbox { position: fixed; inset: 0; z-index: 70; display: grid; grid-template-rows: 1fr auto; background: rgba(5, 8, 24, .94); animation: g-fade var(--motion-base) ease both; }
 .g-lightbox-stage { position: relative; display: grid; place-items: center; padding: var(--space-5) 72px; min-height: 0; }
 .g-lightbox-stage img { max-width: 100%; max-height: 100%; border-radius: var(--radius-md); object-fit: contain; }
 .g-lightbox button { position: absolute; width: 48px; height: 48px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .14); color: #fff; cursor: pointer; }
@@ -227,7 +227,7 @@ img.g-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; 
 /* ---------- Log in / sign up ---------- */
 .g-authx { flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); min-height: calc(100vh - var(--header-h)); }
 .g-authx-art { position: relative; isolation: isolate; overflow: hidden; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; padding: var(--space-7) clamp(28px, 5vw, 72px);
-  background: linear-gradient(0deg, rgba(7, 30, 22, .92) 0%, rgba(7, 30, 22, .5) 55%, rgba(7, 30, 22, .1) 100%), var(--photo) var(--img-auth) center / cover no-repeat; }
+  background: linear-gradient(0deg, rgba(8, 11, 36, .92) 0%, rgba(8, 11, 36, .5) 55%, rgba(8, 11, 36, .1) 100%), var(--photo) var(--img-auth) center / cover no-repeat; }
 .g-authx-copy { display: grid; gap: var(--space-4); }
 .g-authx-art h2 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.08; letter-spacing: -.03em; max-width: 14ch; color: #fff; }
 .g-authx-art .lead { color: rgba(255, 255, 255, .9); max-width: 42ch; font-size: var(--text-lg); }
@@ -343,3 +343,15 @@ html[lang="ko"] body { word-break: keep-all; overflow-wrap: break-word; }
   .g-app { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
   .g-foot { margin-top: var(--space-6); }
 }
+
+/* ===== v3 page backdrops: CSS-only art, chosen by data-page on the layout wrapper ===== */
+.g-app { isolation: isolate; --art-contour: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22 viewBox=%220 0 600 400%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22%3E%3Cpath d=%22M40 200c30-90 150-130 250-110s190 40 230 120-40 150-150 160S90 330 40 200Z%22/%3E%3Cpath d=%22M90 200c25-65 115-95 195-80s145 30 175 90-30 110-110 120-195-5-240-130Z%22/%3E%3Cpath d=%22M145 200c20-42 80-62 135-52s100 22 120 62-20 72-75 80-150-20-180-90Z%22/%3E%3Cpath d=%22M200 205c15-22 50-32 85-26s60 14 70 36-12 40-45 44-98-12-110-54Z%22/%3E%3C/svg%3E"); --art-dimple: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2228%22 height=%2228%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%222%22 fill=%22%23000%22/%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%222%22 fill=%22%23000%22/%3E%3C/svg%3E"); --art-grid: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221%22%3E%3Cpath d=%22M32 0H0V32%22/%3E%3C/svg%3E"); }
+.g-app::before, .g-app::after { content: ""; position: absolute; left: 0; right: 0; top: 0; z-index: -1; pointer-events: none; display: none; }
+.g-app[data-page="home"]::before { display: block; height: 760px; background: radial-gradient(48% 60% at 18% 8%, color-mix(in srgb, var(--primary) 26%, transparent), transparent 70%), radial-gradient(42% 52% at 85% 4%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 70%), radial-gradient(38% 46% at 55% 30%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 70%); }
+.g-app[data-page="home"]::after { display: block; height: 760px; background: var(--primary); opacity: .09; -webkit-mask: var(--art-contour) center top / 900px auto repeat-x, linear-gradient(#000, transparent); mask: var(--art-contour) center top / 900px auto repeat-x; -webkit-mask-composite: source-in; mask-composite: intersect; }
+.g-app[data-page="venues"]::after { display: block; height: 520px; background: var(--primary); opacity: .10; -webkit-mask: var(--art-dimple), linear-gradient(#000, transparent); mask: var(--art-dimple), linear-gradient(#000, transparent); -webkit-mask-composite: source-in; mask-composite: intersect; }
+.g-app[data-page="venue"]::before { display: block; height: 460px; background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 16%, transparent), transparent), radial-gradient(50% 70% at 90% 0, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%); }
+.g-app[data-page="account"]::after { display: block; height: 100%; background: var(--primary); opacity: .05; -webkit-mask: var(--art-grid), linear-gradient(#000 0, transparent 70%); mask: var(--art-grid), linear-gradient(#000 0, transparent 70%); -webkit-mask-composite: source-in; mask-composite: intersect; }
+[data-theme="dark"] .g-app[data-page="venues"]::after, [data-theme="dark"] .g-app[data-page="home"]::after, [data-theme="dark"] .g-app[data-page="account"]::after { background: var(--ink); }
+[data-theme="dark"] .g-app[data-page="home"]::after { opacity: .07; }
+[data-theme="dark"] .g-app[data-page="account"]::after { opacity: .04; }
