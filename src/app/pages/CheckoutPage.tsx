@@ -66,7 +66,7 @@ export default function CheckoutPage() {
     setPaying(true);
     setProblem(null);
     try {
-      // there is no card step in this demo: "paying" confirms the booking
+      // there is no card step yet: "paying" confirms the booking
       await new Promise((r) => setTimeout(r, 800));
       const updated = await bookingApi.setStatus(booking._id, BookingStatus.CONFIRMED);
       setData({ ...booking, ...updated });
@@ -129,6 +129,7 @@ export default function CheckoutPage() {
               </div>
               <div className="g-total"><span style={{ fontWeight: 600 }}>{t("bk.total")}</span><b>{money(booking.price)}</b></div>
               <span className="g-hint">{t("checkout.finalPrice")}</span>
+              <span className="g-hint">{t("checkout.simulatedNote")}</span>
               <div className="g-row" style={{ justifyContent: "flex-end" }}>
                 <button className="g-btn g-btn--secondary" type="button" onClick={() => setAsking(true)}>{t("checkout.cancel")}</button>
                 <button className="g-btn g-btn--accent" type="button" onClick={pay} disabled={paying} aria-busy={paying}>

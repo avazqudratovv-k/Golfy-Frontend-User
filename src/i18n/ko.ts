@@ -62,7 +62,7 @@ export const ko = {
     courses: "골프장",
     simulators: "스크린골프",
     ranges: "연습장",
-    note: "Golfy는 가상의 시설로 만든 포트폴리오 프로젝트예요.",
+    note: "Golfy. 골프 시설을 시간 단위로 예약해요.",
     photoCredits: "사진 출처",
     lightMode: "라이트 모드",
     darkMode: "다크 모드",
@@ -233,6 +233,7 @@ export const ko = {
     cancelFailedText: "다시 시도해 주세요.",
     summary: "예약 내용",
     finalPrice: "Golfy에서 확정한 최종 금액이에요.",
+    simulatedNote: "결제는 현재 모의로 진행되며 개발 중이에요. 실제로 결제되지 않아요.",
     cancel: "예약 취소",
     processing: "처리 중",
     pay: "{{price}} 결제하고 예약 확정",
@@ -431,7 +432,7 @@ export const ko = {
   },
   credits: {
     title: "사진 출처",
-    intro: "Golfy는 포트폴리오 프로젝트이며 모든 시설은 가상의 데모 데이터예요. 사진은 <wiki>위키미디어 공용(Wikimedia Commons)</wiki>의 실제 사진으로, 아래 라이선스에 따라 사용했어요. 이 사이트에 맞게 자르고 크기를 줄여 다시 압축했을 뿐 다른 수정은 없어요. 실제 업체와는 관련이 없어요.",
+    intro: "사진은 <wiki>위키미디어 공용(Wikimedia Commons)</wiki>의 실제 사진으로, 아래 라이선스에 따라 사용했어요. 이 사이트에 맞게 자르고 크기를 줄여 다시 압축했을 뿐 다른 수정은 없어요.",
     by: " 촬영: {{author}}, ",
   },
   meta: {

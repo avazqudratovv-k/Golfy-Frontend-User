@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-// Demo login from the seed (npm run seed in the backend). The booking is cancelled again at the end.
+// Login from the seed (npm run seed in the backend). The booking is cancelled again at the end.
 test("player: log in, pick a free slot, start a booking, cancel it", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("golfy-lang", "en"));
   await page.goto("/login");

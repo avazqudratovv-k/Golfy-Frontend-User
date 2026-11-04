@@ -6,7 +6,7 @@
 
 [![CI](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/avazqudratovv-mit/Golfy-Frontend-User/actions/workflows/ci.yml) ![i18n](https://img.shields.io/badge/UI-한국어%20%7C%20EN-0F3D2E) ![timezone](https://img.shields.io/badge/times-KST-E8743B)
 
-The web app for players of **Golfy**, an hourly golf-venue booking platform for Korea. Find a course, simulator or driving range, see the free hours, book, "pay" and review. It is a portfolio project: venues are fictional demo data and payment is simulated.
+The web app for players of **Golfy**, an hourly golf-venue booking platform for Korea. Find a course, simulator or driving range, see the free hours, book, "pay" and review. Payment is simulated for now and is under development.
 
 **Part of three repos:** [golfy-backend](https://github.com/avazqudratovv-mit/Golfy-backend) (API, `:3011` user / `:3012` admin) · **[golfy-frontend](https://github.com/avazqudratovv-mit/Golfy-Frontend-User)** (this app, `:3000`) · [golfy-admin](https://github.com/avazqudratovv-mit/Golfy-Frontend-Admin) (staff dashboard, `:3001`). The backend README has a 10-line overview of how they fit together.
 
@@ -69,7 +69,7 @@ yarn typecheck && yarn lint && yarn test --watchAll=false && yarn build
 yarn e2e          # optional smoke test: needs the backend with seeded data on :3011 and `yarn start`; uses your installed Chrome
 ```
 
-Needs the [backend](https://github.com/avazqudratovv-mit/Golfy-backend) running with `npm run seed:reset`. Demo player: `minjun@seed.golfy.dev` / `Password123!`.
+Needs the [backend](https://github.com/avazqudratovv-mit/Golfy-backend) running with `npm run seed:reset`. Seed player: `minjun@seed.golfy.dev` / `Password123!`.
 
 | Variable | Purpose |
 | --- | --- |
@@ -85,7 +85,7 @@ Needs the [backend](https://github.com/avazqudratovv-mit/Golfy-backend) running 
 
 ## Limitations
 
-Simulated payment, demo data only, no offline mode, the Korean copy has not been reviewed by a native editor, CRA is no longer maintained.
+Simulated payment (under development), no offline mode, the Korean copy has not been reviewed by a native editor, CRA is no longer maintained.
 
 ## What I would do next
 

@@ -63,7 +63,7 @@ export const en = {
     courses: "Courses",
     simulators: "Simulators",
     ranges: "Ranges",
-    note: "Golfy. A portfolio project with fictional venues.",
+    note: "Golfy. Booking golf venues by the hour.",
     photoCredits: "Photo credits",
     lightMode: "Light mode",
     darkMode: "Dark mode",
@@ -239,6 +239,7 @@ export const en = {
     cancelFailedText: "Please try again.",
     summary: "Booking summary",
     finalPrice: "Final price, confirmed by Golfy.",
+    simulatedNote: "Payment is simulated for now and is still under development. No real charge is made.",
     cancel: "Cancel booking",
     processing: "Processing",
     pay: "Pay and confirm {{price}}",
@@ -438,7 +439,7 @@ export const en = {
   },
   credits: {
     title: "Photo credits",
-    intro: "Golfy is a portfolio project and its venues are fictional demo data. The photographs are real pictures from <wiki>Wikimedia Commons</wiki>, shown under the licences below. They were cropped and resized (and re-compressed) for this site; nothing else was changed. No real business is implied.",
+    intro: "The photographs are real pictures from <wiki>Wikimedia Commons</wiki>, shown under the licences below. They were cropped and resized (and re-compressed) for this site; nothing else was changed.",
     by: " by {{author}}, ",
   },
   meta: {
